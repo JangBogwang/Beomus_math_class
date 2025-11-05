@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>말랑말랑 구구단 게임 - 모드 선택</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .mode-selection {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      margin-top: 40px;
+    }
+    .mode-card {
+      background: var(--panel);
+      border: 2px solid var(--border);
+      border-radius: 24px;
+      padding: 40px;
+      text-align: center;
+      width: 300px;
+      box-shadow: var(--shadow);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mode-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 18px 40px rgba(255,137,192,.3);
+    }
+    .mode-card h2 {
+      margin-top: 0;
+      color: var(--accent);
+    }
+    .mode-card p {
+      color: var(--muted);
+    }
+    .mode-card a {
+      text-decoration: none;
+      color: inherit;
+    }
+    .start-btn {
+      display: inline-block;
+      margin-top: 20px;
+      background: linear-gradient(180deg, #ff9ad0, #ff6fb8);
+      color: white;
+      padding: 12px 24px;
+      border-radius: 14px;
+      font-weight: 700;
+      text-decoration: none;
+      box-shadow: 0 6px 0 #e85aa8;
+    }
+  </style>
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>🍡 말랑말랑 구구단 게임</h1>
+      <p class="sub">플레이할 게임 모드를 선택해주세요.</p>
+    </header>
+
+    <div class="mode-selection">
+      <div class="mode-card">
+        <a href="basic.html">
+          <h2>기초 모드</h2>
+          <p>사지선다형 문제로 구구단을 연습해요.</p>
+          <span class="start-btn">기초 모드 시작</span>
+        </a>
+      </div>
+      <div class="mode-card">
+        <a href="advanced.html">
+          <h2>심화 모드</h2>
+          <p>직접 답을 입력하며 순발력을 길러요.</p>
+          <span class="start-btn">심화 모드 시작</span>
+        </a>
+      </div>
+    </div>
+  </main>
+</body>
+</html>

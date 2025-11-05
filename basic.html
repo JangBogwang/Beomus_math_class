@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>말랑말랑 구구단 게임 - 기초 모드</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>🍡 말랑말랑 구구단 게임 - 기초 모드</h1>
+      <p class="sub">여러 단을 골라요! 선택한 단들로만 문제가 나와요. 60초 안에 많이 맞혀보세요!</p>
+    </header>
+
+    <!-- 단 선택 -->
+    <section class="panel" id="select-panel" aria-label="단 선택">
+      <div class="mascot" aria-hidden="true">🐥</div>
+      <h2>단 선택 (중복 가능)</h2>
+      <div class="dan-grid" role="group" aria-label="구구단 단 선택">
+        <button class="dan-btn" data-dan="2">2단</button>
+        <button class="dan-btn" data-dan="3">3단</button>
+        <button class="dan-btn" data-dan="4">4단</button>
+        <button class="dan-btn" data-dan="5">5단</button>
+        <button class="dan-btn" data-dan="6">6단</button>
+        <button class="dan-btn" data-dan="7">7단</button>
+        <button class="dan-btn" data-dan="8">8단</button>
+        <button class="dan-btn" data-dan="9">9단</button>
+      </div>
+      <div class="selection">
+        <span>선택: <strong id="chosenDan">없음</strong></span>
+        <button id="clearBtn" class="ghost">초기화</button>
+        <button id="startBtn" class="primary" disabled>게임 시작</button>
+      </div>
+      <p class="hint">💡 tip: 한 번 더 누르면 해제돼요!</p>
+    </section>
+
+    <!-- 게임 -->
+    <section class="panel hidden" id="game-panel" aria-live="polite">
+      <div class="hud">
+        <div class="hud-item pill">
+          <div class="label">남은 시간</div>
+          <div class="timer">
+            <div id="timeBar" class="time-bar"></div>
+          </div>
+          <div id="timeLeft" class="big">60</div>
+        </div>
+        <div class="hud-item pill">
+          <div class="label">점수</div>
+          <div id="score" class="big">0</div>
+        </div>
+        <div class="hud-item pill">
+          <div class="label">콤보</div>
+          <div id="combo" class="big">x1</div>
+        </div>
+      </div>
+
+      <div class="question-card bouncy">
+        <div id="question" class="question">— × — = ?</div>
+        <div id="choices" class="choices-grid">
+          <!-- 사지선다 버튼이 여기에 동적으로 추가됩니다. -->
+        </div>
+        <div id="feedback" class="feedback" aria-live="assertive"></div>
+      </div>
+
+      <div class="chips" id="chips"></div>
+
+      <div class="tips">
+        <ul>
+          <li>여러 단을 고르면 그 단들만 랜덤으로 나와요.</li>
+          <li>연속 정답(콤보)일수록 점수 업! 콤보 5/10마다 +1초 보너스.</li>
+          <li>오답이면 콤보가 0이 되고 <em>시간이 2초</em> 줄어요.</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 결과 -->
+    <section class="panel hidden" id="result-panel">
+      <h2>게임 결과</h2>
+      <p>
+        <span class="tag" id="resultSet">-</span> 조합에서 획득한 점수:
+        <strong id="resultScore" class="accent">0</strong>
+      </p>
+      <p>전체 최고 기록: <strong id="bestScore" class="accent">0</strong></p>
+      <div class="actions">
+        <button id="retryBtn" class="primary">같은 조합 다시</button>
+        <button id="changeDanBtn" class="primary">조합 바꾸기</button>
+      </div>
+
+      <hr />
+      <h3>조합별 최고 기록(내 브라우저)</h3>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>조합</th>
+              <th>최고 점수</th> 
+            </tr>
+          </thead>
+          <tbody id="bestTableBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <footer class="footer">
+      <small>© 2025 말랑말랑 구구단</small>
+    </footer>
+  </main>
+
+  <script src="basic.js"></script>
+</body>
+</html>
