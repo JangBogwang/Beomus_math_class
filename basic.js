@@ -145,7 +145,12 @@
     state.time = Math.max(0, state.time - 2);
   }
 
-  const characterImages = ["asset/img/angry.png", "asset/img/cowboy.png", "asset/img/cyborg.png", "asset/img/normal.png"];
+  const characterData = [
+    { src: "asset/img/angry.png", name: "화난 범뮤" },
+    { src: "asset/img/cowboy.png", name: "카우보이 범뮤" },
+    { src: "asset/img/cyborg.png", name: "사이보그 범뮤" },
+    { src: "asset/img/normal.png", name: "평범한 범뮤" }
+  ];
 
   function endGame() {
     state.playing = false;
@@ -170,10 +175,12 @@
 
     renderBestTable();
 
-    // Set random character image
+    // Set random character image and name
     const resultCharacterEl = document.getElementById("result-character");
-    const randomImage = characterImages[Math.floor(Math.random() * characterImages.length)];
-    resultCharacterEl.src = randomImage;
+    const resultCharacterNameEl = document.getElementById("result-character-name");
+    const randomCharacter = characterData[Math.floor(Math.random() * characterData.length)];
+    resultCharacterEl.src = randomCharacter.src;
+    resultCharacterNameEl.textContent = randomCharacter.name;
 
     gamePanel.classList.add("hidden");
     selectPanel.classList.add("hidden");

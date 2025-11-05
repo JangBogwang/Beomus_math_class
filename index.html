@@ -52,6 +52,7 @@
 </head>
 <body>
   <main class="container">
+    <img id="main-character" src="" alt="메인 캐릭터" class="main-character">
     <header class="header">
       <h1>🍡 말랑말랑 구구단 게임</h1>
       <p class="sub">플레이할 게임 모드를 선택해주세요.</p>
@@ -74,5 +75,18 @@
       </div>
     </div>
   </main>
+  <script>
+    const characterData = [
+      { src: "asset/img/angry.png", name: "화난 범뮤" },
+      { src: "asset/img/cowboy.png", name: "카우보이 범뮤" },
+      { src: "asset/img/cyborg.png", name: "사이보그 범뮤" },
+      { src: "asset/img/normal.png", name: "평범한 범뮤" },
+      { src: "asset/img/idol.png", name: "아이돌 범뮤" },
+      { src: "asset/img/hanbok.png", name: "한복 범뮤" }
+    ];
+    const mainCharacterEl = document.getElementById("main-character");
+    const randomCharacter = characterData[Math.floor(Math.random() * characterData.length)];
+    mainCharacterEl.src = randomCharacter.src;
+  </script>
 </body>
 </html>
