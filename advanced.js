@@ -127,6 +127,8 @@
     state.time = Math.max(0, state.time - 2);
   }
 
+  const characterImages = ["asset/img/angry.png", "asset/img/cowboy.png", "asset/img/cyborg.png", "asset/img/normal.png"];
+
   function endGame() {
     state.playing = false;
     clearInterval(state.timerId);
@@ -149,6 +151,11 @@
     bestScoreEl.textContent = String(bestScore);
 
     renderBestTable();
+
+    // Set random character image
+    const resultCharacterEl = document.getElementById("result-character");
+    const randomImage = characterImages[Math.floor(Math.random() * characterImages.length)];
+    resultCharacterEl.src = randomImage;
 
     gamePanel.classList.add("hidden");
     selectPanel.classList.add("hidden");
