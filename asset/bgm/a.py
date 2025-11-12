@@ -1,8 +1,8 @@
 from pydub import AudioSegment
 
 # === 설정 ===
-input_path = "stage11.mp3"      # 원본 파일 경로
-output_path = "stage1.mp3"  # 결과 파일 경로
+input_path = "stage22.mp3"      # 원본 파일 경로
+output_path = "stage2.mp3"  # 결과 파일 경로
 target_duration_ms = 60 * 1000      # 앞부분 1분(60초)
 target_sample_rate = 16000          # 낮은 샘플링(기본 44.1kHz → 16kHz)
 target_bitrate = "64k"              # 비트레이트 64kbps (용량 절감)
