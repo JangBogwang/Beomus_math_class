@@ -139,260 +139,295 @@
         .timer { left: 2vw; }
         .score { right: 2vw; }
 
-        .end-screen-btn {
-            display: inline-block;
-            margin-top: 20px;
-            padding: 10px 20px;
-            background-color: #ff89c0;
-            color: white;
-            text-decoration: none;
-            border-radius: 10px;
-            font-size: 1.2em;
-        }
-
-        /* 클릭·정답 효과 유지 */
-        .correct-flash { animation: flash-correct 0.5s; }
-        @keyframes flash-correct {
-        0%, 100% { background-color: #8eff8e; }
-        50% { background-color: white; }
-        }
-        .shake { animation: shake-horizontal 0.5s; }
-        @keyframes shake-horizontal {
-        0%, 100% { transform: translateX(0); }
-        10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
-        20%, 40%, 60%, 80% { transform: translateX(10px); }
-        }
-
-        /* 비치볼 튀어 나가기 */
-        .ball-fly {
-        position: fixed;
-        width: 56px;
-        height: 56px;
-        pointer-events: none;
-        z-index: 9999;
-        animation: ballBounceOut 900ms ease-out forwards;
-        filter: drop-shadow(0 6px 12px rgba(0,0,0,.25));
-        }
-
-        @keyframes ballBounceOut {
-        0%   { transform: translate(0, 0) scale(0.9); opacity: 1; }
-        25%  { transform: translate(0, -24px) scale(1.05); }
-        40%  { transform: translate(0, 0) scale(1.0); }
-        60%  { transform: translate(80px, -80px) scale(1.05); }
-        100% { transform: translate(240px, -200px) scale(0.9); opacity: 0; }
-        }
-    </style>
-</head>
-<body>
-    <div class="game-container">
-        <div class="loading-screen">
-            <p>게임을 불러오는 중입니다.</p>
-        </div>
-        <div class="countdown-screen" style="display: none;">
-            <p class="countdown"></p>
-        </div>
-        <div class="game-scene" style="display: none;">
-            <div class="timer">Time: 60</div>
-            <div class="score">Score: 0</div>
-            <img src="../asset/character/bikini.png" alt="Normal Character" class="character">
-            <div class="speech-bubble">
-                <p id="question"></p>
-                <p id="dialogue"></p>
+                .end-screen {
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    flex-direction: column;
+                    justify-content: center;
+                    align-items: center;
+                    background-color: rgba(0, 0, 0, 0.8);
+                    color: white;
+                    text-align: center;
+                    z-index: 20;
+                }
+                .end-screen h1 {
+                    font-size: 3em;
+                    margin-bottom: 10px;
+                }
+                .end-screen h2 {
+                    font-size: 2em;
+                    margin-bottom: 20px;
+                }
+                .end-screen-btn-group {
+                    display: flex;
+                    gap: 20px;
+                }
+                .end-screen-btn {
+                    display: inline-block;
+                    margin-top: 20px;
+                    padding: 10px 20px;
+                    background-color: #ff89c0;
+                    color: white;
+                    text-decoration: none;
+                    border-radius: 10px;
+                    font-size: 1.2em;
+                }
+        
+                /* 클릭·정답 효과 유지 */
+                .correct-flash { animation: flash-correct 0.5s; }
+                @keyframes flash-correct {
+                0%, 100% { background-color: #8eff8e; }
+                50% { background-color: white; }
+                }
+                .shake { animation: shake-horizontal 0.5s; }
+                @keyframes shake-horizontal {
+                0%, 100% { transform: translateX(0); }
+                10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+                20%, 40%, 60%, 80% { transform: translateX(10px); }
+                }
+        
+                /* 비치볼 튀어 나가기 */
+                .ball-fly {
+                position: fixed;
+                width: 56px;
+                height: 56px;
+                pointer-events: none;
+                z-index: 9999;
+                animation: ballBounceOut 900ms ease-out forwards;
+                filter: drop-shadow(0 6px 12px rgba(0,0,0,.25));
+                }
+        
+                @keyframes ballBounceOut {
+                0%   { transform: translate(0, 0) scale(0.9); opacity: 1; }
+                25%  { transform: translate(0, -24px) scale(1.05); }
+                40%  { transform: translate(0, 0) scale(1.0); }
+                60%  { transform: translate(80px, -80px) scale(1.05); }
+                100% { transform: translate(240px, -200px) scale(0.9); opacity: 0; }
+                }
+            </style>
+        </head>
+        <body>
+            <div class="game-container">
+                <div class="loading-screen">
+                    <p>게임을 불러오는 중입니다.</p>
+                </div>
+                <div class="countdown-screen" style="display: none;">
+                    <p class="countdown"></p>
+                </div>
+                <div class="game-scene" style="display: none;">
+                    <div class="timer">Time: 60</div>
+                    <div class="score">Score: 0</div>
+                    <img src="../asset/character/bikini.png" alt="Normal Character" class="character">
+                    <div class="speech-bubble">
+                        <p id="question"></p>
+                        <p id="dialogue"></p>
+                    </div>
+                    <div class="answer-choices">
+                        <div class="choice-card"><span></span></div>
+                        <div class="choice-card"><span></span></div>
+                        <div class="choice-card"><span></span></div>
+                        <div class="choice-card"><span></span></div>
+                    </div>
+                </div>
             </div>
-            <div class="answer-choices">
-                <div class="choice-card"><span></span></div>
-                <div class="choice-card"><span></span></div>
-                <div class="choice-card"><span></span></div>
-                <div class="choice-card"><span></span></div>
-            </div>
-        </div>
-    </div>
-
-    <audio id="bgm" loop>
-        <source src="../asset/bgm/stage2.mp3" type="audio/mpeg">
-    </audio>
-
-    <script>
-        const loadingScreen = document.querySelector('.loading-screen');
-        const countdownScreen = document.querySelector('.countdown-screen');
-        const countdownEl = document.querySelector('.countdown');
-        const gameScene = document.querySelector('.game-scene');
-        const bgm = document.getElementById('bgm');
-        const questionEl = document.getElementById('question');
-        const dialogueEl = document.getElementById('dialogue');
-        const answerChoices = document.querySelector('.answer-choices');
-        const choiceCards = document.querySelectorAll('.choice-card'); // 고정 참조(이벤트 바인딩용)
-        const timerEl = document.querySelector('.timer');
-        const scoreEl = document.querySelector('.score');
-
-        let score = 0;
-        let timeLeft = 60;
-        let timerInterval;
-        let dialogueInterval;
-        let shuffleInterval;
-        let currentAnswer;
-
-        // 정답 애니메이션 중엔 셔플 잠금
-        let shuffleLocked = false;
-
-        const dialogues = [
-            "여름이다!",
-            "모래성 만들자!",
-            "물놀이 하러 갈래?",
-            "더워....",
-            "재밌게 잘 놀았다."
-        ];
-
-        function preloadResources() {
-            const resources = [
-            '../asset/stage/stage2.png',
-            '../asset/character/bikini.png',
-            '../asset/bgm/stage2.mp3',
-            '../asset/action/beach-ball.svg'
-            ];
-            let loadedCount = 0;
-            const done = () => { loadedCount++; if (loadedCount === resources.length) startGame(); };
-
-            resources.forEach(res => {
-            if (res.endsWith('.png') || res.endsWith('.svg')) {
-                const img = new Image();
-                img.onload = done; img.onerror = done;
-                img.src = res;
-            } else if (res.endsWith('.mp3')) {
-                const audio = new Audio();
-                // canplaythrough가 브라우저마다 여러 번 올 수 있어 한 번만 카운트
-                const once = () => { audio.removeEventListener('canplaythrough', once); done(); };
-                audio.addEventListener('canplaythrough', once, { once:true });
-                audio.src = res;
-            }
-            });
-        }
-
-        function startGame() {
-            loadingScreen.style.display = 'none';
-            countdownScreen.style.display = 'flex';
-            let count = 3;
-            countdownEl.textContent = count;
-            const countdownInterval = setInterval(() => {
-            count--;
-            if (count > 0) {
-                countdownEl.textContent = count;
-            } else {
-                clearInterval(countdownInterval);
-                countdownScreen.style.display = 'none';
-                gameScene.style.display = 'flex';
-                bgm.play().catch(()=>{});
-                startTimer();
-                startDialogue();
-                startShuffle();
-                generateQuestion();
-            }
-            }, 1000);
-        }
-
-        function startTimer() {
-            clearInterval(timerInterval);
-            timerInterval = setInterval(() => {
-            timeLeft--;
-            timerEl.textContent = `Time: ${timeLeft}`;
-            if (timeLeft <= 0) {
-                clearInterval(timerInterval);
-                clearInterval(dialogueInterval);
-                clearInterval(shuffleInterval);
-                endGame();
-            }
-            }, 1000);
-        }
-
-        function startDialogue() {
-            clearInterval(dialogueInterval);
-            let dialogueIndex = 0;
-            dialogueEl.textContent = dialogues[dialogueIndex];
-            dialogueInterval = setInterval(() => {
-            dialogueIndex = (dialogueIndex + 1) % dialogues.length;
-            dialogueEl.textContent = dialogues[dialogueIndex];
-            }, 10000);
-        }
-
-        // ✅ 셔플 안정화: 부모의 현재 자식 순서를 기준으로 매번 새로 섞고 재배치
-        function startShuffle() {
-            clearInterval(shuffleInterval);
-            shuffleInterval = setInterval(() => {
-            if (shuffleLocked) return; // 정답 처리 중엔 섞지 않음
-            const cards = Array.from(answerChoices.children); // 현재 DOM 순서
-            for (let i = cards.length - 1; i > 0; i--) {      // Fisher–Yates
-                const j = Math.floor(Math.random() * (i + 1));
-                [cards[i], cards[j]] = [cards[j], cards[i]];
-            }
-            cards.forEach(card => answerChoices.appendChild(card)); // 재배치
-            }, 2000);
-        }
-
-        function generateQuestion() {
-            shuffleLocked = false; // 새 문제에서는 셔플 허용
-            const a = Math.floor(Math.random() * 4) + 6; // 6~9
-            const b = Math.floor(Math.random() * 9) + 1; // 1~9
-            currentAnswer = a * b;
-            questionEl.textContent = `${a} × ${b} = ?`;
-
-            const choices = generateChoices(currentAnswer);
-            choiceCards.forEach((card, index) => {
-            card.classList.remove('correct-flash','shake');
-            card.querySelector('span').textContent = choices[index];
-            card.onclick = () => checkAnswer(card, choices[index]);
-            });
-        }
-
-        function generateChoices(correctAnswer) {
-            const choices = new Set([correctAnswer]);
-            while (choices.size < 4) {
-            const delta = Math.floor(Math.random() * 11) - 5; // -5~+5
-            const wrongAnswer = correctAnswer + delta || correctAnswer + 7; // 0 방지
-            if (wrongAnswer > 0) choices.add(wrongAnswer);
-            }
-            return Array.from(choices).sort(() => Math.random() - 0.5);
-        }
-
-        // 🎉 정답 시 비치볼 튀어 나가기
-        function spawnBounceBall(fromCard) {
-            const rect = fromCard.getBoundingClientRect();
-            const img = document.createElement('img');
-            img.src = '../asset/action/beach-ball.svg';
-            img.className = 'ball-fly';
-            img.style.left = (rect.left + rect.width/2 - 28) + 'px';
-            img.style.top  = (rect.top + rect.height/2 - 28) + 'px';
-            document.body.appendChild(img);
-            img.addEventListener('animationend', () => img.remove());
-        }
-
-        function checkAnswer(card, selectedAnswer) {
-            card.classList.remove('correct-flash', 'shake');
-            if (selectedAnswer === currentAnswer) {
-            shuffleLocked = true;                 // ⛔ 정답 처리 중 셔플 잠금
-            score++;
-            scoreEl.textContent = `Score: ${score}`;
-            card.classList.add('correct-flash');
-            spawnBounceBall(card);                // 🏐 통통 튀며 날아가기
-            setTimeout(generateQuestion, 300);    // 다음 문제
-            } else {
-            card.classList.add('shake');
-            }
-        }
-
-        function endGame() {
-            bgm.pause();
-            let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
-            if (score >= 10) {
-            endMessage += '<h2>축하합니다! 통과!</h2>';
-            endMessage += '<a href="../select_stage.html" class="end-screen-btn">스테이지 선택으로</a>';
-            } else {
-            endMessage += '<h2>아쉽지만... 다시 도전해보세요!</h2>';
-            endMessage += '<a href="stage2.html" class="end-screen-btn">다시하기</a>';
-            }
-            gameScene.innerHTML = `<div style="text-align: center; color: white; padding-top: 40%;">${endMessage}</div>`;
-        }
-
-        window.onload = preloadResources;
-        </script>
-</body>
-</html>
+        
+            <audio id="bgm" loop>
+                <source src="../asset/bgm/stage2.mp3" type="audio/mpeg">
+            </audio>
+        
+            <script>
+                const loadingScreen = document.querySelector('.loading-screen');
+                const countdownScreen = document.querySelector('.countdown-screen');
+                const countdownEl = document.querySelector('.countdown');
+                const gameScene = document.querySelector('.game-scene');
+                const bgm = document.getElementById('bgm');
+                const questionEl = document.getElementById('question');
+                const dialogueEl = document.getElementById('dialogue');
+                const answerChoices = document.querySelector('.answer-choices');
+                const choiceCards = document.querySelectorAll('.choice-card'); // 고정 참조(이벤트 바인딩용)
+                const timerEl = document.querySelector('.timer');
+                const scoreEl = document.querySelector('.score');
+        
+                let score = 0;
+                let timeLeft = 60;
+                let timerInterval;
+                let dialogueInterval;
+                let shuffleInterval;
+                let currentAnswer;
+        
+                // 정답 애니메이션 중엔 셔플 잠금
+                let shuffleLocked = false;
+        
+                const dialogues = [
+                    "여름이다!",
+                    "모래성 만들자!",
+                    "물놀이 하러 갈래?",
+                    "맛있는 수박 먹자.",
+                    "다음에 또 놀자."
+                ];
+        
+                function preloadResources() {
+                    const resources = [
+                    '../asset/stage/stage2.png',
+                    '../asset/character/bikini.png',
+                    '../asset/bgm/stage2.mp3',
+                    '../asset/action/beach-ball.svg'
+                    ];
+                    let loadedCount = 0;
+                    const done = () => { loadedCount++; if (loadedCount === resources.length) startGame(); };
+        
+                    resources.forEach(res => {
+                    if (res.endsWith('.png') || res.endsWith('.svg')) {
+                        const img = new Image();
+                        img.onload = done; img.onerror = done;
+                        img.src = res;
+                    } else if (res.endsWith('.mp3')) {
+                        const audio = new Audio();
+                        // canplaythrough가 브라우저마다 여러 번 올 수 있어 한 번만 카운트
+                        const once = () => { audio.removeEventListener('canplaythrough', once); done(); };
+                        audio.addEventListener('canplaythrough', once, { once:true });
+                        audio.src = res;
+                    }
+                    });
+                }
+        
+                function startGame() {
+                    loadingScreen.style.display = 'none';
+                    countdownScreen.style.display = 'flex';
+                    let count = 3;
+                    countdownEl.textContent = count;
+                    const countdownInterval = setInterval(() => {
+                    count--;
+                    if (count > 0) {
+                        countdownEl.textContent = count;
+                    } else {
+                        clearInterval(countdownInterval);
+                        countdownScreen.style.display = 'none';
+                        gameScene.style.display = 'flex';
+                        bgm.play().catch(()=>{});
+                        startTimer();
+                        startDialogue();
+                        startShuffle();
+                        generateQuestion();
+                    }
+                    }, 1000);
+                }
+        
+                function startTimer() {
+                    clearInterval(timerInterval);
+                    timerInterval = setInterval(() => {
+                    timeLeft--;
+                    timerEl.textContent = `Time: ${timeLeft}`;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        clearInterval(dialogueInterval);
+                        clearInterval(shuffleInterval);
+                        endGame();
+                    }
+                    }, 1000);
+                }
+        
+                function startDialogue() {
+                    clearInterval(dialogueInterval);
+                    let dialogueIndex = 0;
+                    dialogueEl.textContent = dialogues[dialogueIndex];
+                    dialogueInterval = setInterval(() => {
+                    dialogueIndex = (dialogueIndex + 1) % dialogues.length;
+                    dialogueEl.textContent = dialogues[dialogueIndex];
+                    }, 10000);
+                }
+        
+                // ✅ 셔플 안정화: 부모의 현재 자식 순서를 기준으로 매번 새로 섞고 재배치
+                function startShuffle() {
+                    clearInterval(shuffleInterval);
+                    shuffleInterval = setInterval(() => {
+                    if (shuffleLocked) return; // 정답 처리 중엔 섞지 않음
+                    const cards = Array.from(answerChoices.children); // 현재 DOM 순서
+                    for (let i = cards.length - 1; i > 0; i--) {      // Fisher–Yates
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [cards[i], cards[j]] = [cards[j], cards[i]];
+                    }
+                    cards.forEach(card => answerChoices.appendChild(card)); // 재배치
+                    }, 3000);
+                }
+        
+                function generateQuestion() {
+                    shuffleLocked = false; // 새 문제에서는 셔플 허용
+                    const a = Math.floor(Math.random() * 4) + 6; // 6~9
+                    const b = Math.floor(Math.random() * 9) + 1; // 1~9
+                    currentAnswer = a * b;
+                    questionEl.textContent = `${a} × ${b} = ?`;
+        
+                    const choices = generateChoices(currentAnswer);
+                    choiceCards.forEach((card, index) => {
+                    card.classList.remove('correct-flash','shake');
+                    card.querySelector('span').textContent = choices[index];
+                    card.onclick = () => checkAnswer(card, choices[index]);
+                    });
+                }
+        
+                function generateChoices(correctAnswer) {
+                    const choices = new Set([correctAnswer]);
+                    while (choices.size < 4) {
+                    const delta = Math.floor(Math.random() * 11) - 5; // -5~+5
+                    const wrongAnswer = correctAnswer + delta || correctAnswer + 7; // 0 방지
+                    if (wrongAnswer > 0) choices.add(wrongAnswer);
+                    }
+                    return Array.from(choices).sort(() => Math.random() - 0.5);
+                }
+        
+                // 🎉 정답 시 비치볼 튀어 나가기
+                function spawnBounceBall(fromCard) {
+                    const rect = fromCard.getBoundingClientRect();
+                    const img = document.createElement('img');
+                    img.src = '../asset/action/beach-ball.svg';
+                    img.className = 'ball-fly';
+                    img.style.left = (rect.left + rect.width/2 - 28) + 'px';
+                    img.style.top  = (rect.top + rect.height/2 - 28) + 'px';
+                    document.body.appendChild(img);
+                    img.addEventListener('animationend', () => img.remove());
+                }
+        
+                function checkAnswer(card, selectedAnswer) {
+                    card.classList.remove('correct-flash', 'shake');
+                    if (selectedAnswer === currentAnswer) {
+                    shuffleLocked = true;                 // ⛔ 정답 처리 중 셔플 잠금
+                    score++;
+                    scoreEl.textContent = `Score: ${score}`;
+                    card.classList.add('correct-flash');
+                    spawnBounceBall(card);                // 🏐 통통 튀며 날아가기
+                    setTimeout(generateQuestion, 300);    // 다음 문제
+                    } else {
+                    card.classList.add('shake');
+                    }
+                }
+        
+                function endGame() {
+                    bgm.pause();
+                    let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
+                    if (score >= 10) {
+                        endMessage += '<h2>축하합니다! 통과!</h2>';
+                    } else {
+                        endMessage += '<h2>아쉽지만... 다시 도전해보세요!</h2>';
+                    }
+                    const endScreen = document.createElement('div');
+                    endScreen.className = 'end-screen';
+                    endScreen.innerHTML = `
+                        <div>
+                            ${endMessage}
+                            <div class="end-screen-btn-group">
+                                <a href="stage2.html" class="end-screen-btn">다시하기</a>
+                                <a href="../select_stage.html" class="end-screen-btn">스테이지 선택으로</a>
+                            </div>
+                        </div>
+                    `;
+                    document.querySelector('.game-container').appendChild(endScreen);
+                }
+        
+                window.onload = preloadResources;
+            </script>
+        </body></html>

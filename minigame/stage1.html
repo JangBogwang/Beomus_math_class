@@ -138,6 +138,33 @@
         .timer { left: 2vw; }
         .score { right: 2vw; }
 
+        .end-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: white;
+            text-align: center;
+            z-index: 20;
+        }
+        .end-screen h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+        .end-screen h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+        .end-screen-btn-group {
+            display: flex;
+            gap: 20px;
+        }
         .end-screen-btn {
             display: inline-block;
             margin-top: 20px;
@@ -331,12 +358,21 @@
             let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
             if (score >= 10) {
                 endMessage += '<h2>축하합니다! 통과!</h2>';
-                endMessage += '<a href="../select_stage.html" class="end-screen-btn">스테이지 선택으로</a>';
             } else {
                 endMessage += '<h2>아쉽지만... 다시 도전해보세요!</h2>';
-                endMessage += '<a href="stage1.html" class="end-screen-btn">다시하기</a>';
             }
-            gameScene.innerHTML = `<div style="text-align: center; color: white; padding-top: 40%;">${endMessage}</div>`;
+            const endScreen = document.createElement('div');
+            endScreen.className = 'end-screen';
+            endScreen.innerHTML = `
+                <div>
+                    ${endMessage}
+                    <div class="end-screen-btn-group">
+                        <a href="stage1.html" class="end-screen-btn">다시하기</a>
+                        <a href="../select_stage.html" class="end-screen-btn">스테이지 선택으로</a>
+                    </div>
+                </div>
+            `;
+            document.querySelector('.game-container').appendChild(endScreen);
         }
 
         window.onload = preloadResources;
