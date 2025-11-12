@@ -5,55 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 <title>스테이지 선택</title>
     <link rel="icon" href="asset/stage/stage1.png">
-<style>
-  @import url('https://fonts.googleapis.com/css2?family=Black+Han+Sans&display=swap');
-  
-  :root{
-    --primary: #667eea;
-    --secondary: #764ba2;
-    --accent: #f093fb;
-    --success: #4facfe;
-    --warning: #fa709a;
-    --bg: #0f0c29;
-    --card-bg: rgba(255,255,255,0.1);
-  }
-  
-  * {
-    box-sizing: border-box;
-    -webkit-tap-highlight-color: transparent;
-  }
-  
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&family=Poppins:wght@500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+<style>  
   body {
-    margin: 0;
-    padding: 0;
-    min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-    background-attachment: fixed;
-    color: #fff;
-    font-family: 'Black Han Sans', system-ui, -apple-system, sans-serif;
-    overflow-x: hidden;
-  }
-  
-  /* 애니메이션 배경 */
-  body::before {
-    content: '';
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: 
-      radial-gradient(circle at 20% 50%, rgba(102, 126, 234, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 80% 80%, rgba(240, 147, 251, 0.3) 0%, transparent 50%),
-      radial-gradient(circle at 40% 20%, rgba(79, 172, 254, 0.2) 0%, transparent 50%);
-    animation: float 20s ease-in-out infinite;
-    pointer-events: none;
-  }
-  
-  @keyframes float {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -30px) scale(1.1); }
-    66% { transform: translate(-20px, 20px) scale(0.9); }
+    color: var(--text); /* Use text color from styles.css */
   }
   
   .container {
@@ -77,33 +33,19 @@
   }
   
   .title {
-    margin: 0 0 12px;
-    font-size: 42px;
-    text-shadow: 0 4px 20px rgba(0,0,0,0.3), 0 0 40px rgba(255,255,255,0.2);
-    letter-spacing: 2px;
-  }
-  
-  .title-glow {
-    background: linear-gradient(45deg, #fff, #f093fb, #fff);
-    background-size: 200% 200%;
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    animation: shimmer 3s ease-in-out infinite;
-  }
-  
-  @keyframes shimmer {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    font-family: 'Poppins', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    font-size: 36px;
+    color: var(--accent);
   }
   
   .sub {
     margin: 0;
     font-size: 14px;
-    opacity: 0.9;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
     font-family: system-ui;
-    font-weight: 600;
+    color: var(--muted);
   }
   
   /* 스테이지 카드 */
@@ -116,30 +58,14 @@
   .stage-card {
     display: block;
     text-decoration: none;
-    background: rgba(255,255,255,0.15);
-    backdrop-filter: blur(10px);
-    border: 2px solid rgba(255,255,255,0.2);
+    background: var(--panel);
+    border: 2px solid var(--border);
     border-radius: 20px;
     overflow: hidden;
-    box-shadow: 0 8px 32px rgba(0,0,0,0.3);
+    box-shadow: var(--shadow);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     animation: fadeIn 0.6s ease-out backwards;
     position: relative;
-  }
-  
-  .stage-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-    transition: left 0.5s;
-  }
-  
-  .stage-card:active::before {
-    left: 100%;
   }
   
   @keyframes fadeIn {
@@ -152,11 +78,10 @@
   .stage-card:nth-child(3) { animation-delay: 0.3s; }
   .stage-card:nth-child(4) { animation-delay: 0.4s; }
   .stage-card:nth-child(5) { animation-delay: 0.5s; }
-  .stage-card:nth-child(6) { animation-delay: 0.6s; }
   
-  .stage-card:active {
-    transform: scale(0.97);
-    box-shadow: 0 4px 16px rgba(0,0,0,0.4);
+  .stage-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 40px rgba(255,137,192,.3);
   }
   
   .stage-content {
@@ -175,41 +100,7 @@
     align-items: center;
     justify-content: center;
     font-size: 40px;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
-    position: relative;
     overflow: hidden;
-  }
-  
-  .stage-icon::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: linear-gradient(45deg, transparent, rgba(255,255,255,0.1), transparent);
-    animation: iconShine 3s linear infinite;
-  }
-  
-  @keyframes iconShine {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
-  }
-  
-  /* 각 스테이지별 색상 */
-  .stage-card:nth-child(1) .stage-icon { background: linear-gradient(135deg, #84fab0 0%, #8fd3f4 100%); }
-  .stage-card:nth-child(2) .stage-icon { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-  .stage-card:nth-child(3) .stage-icon { background: linear-gradient(135deg, #fbc2eb 0%, #a6c1ee 100%); }
-  .stage-card:nth-child(4) .stage-icon { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-  .stage-card:nth-child(5) .stage-icon { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-  .stage-card:nth-child(6) .stage-icon { 
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    animation: pulse 2s ease-in-out infinite;
-  }
-  
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
   }
   
   .stage-info {
@@ -225,7 +116,7 @@
   
   .badge {
     display: inline-block;
-    background: rgba(255,255,255,0.25);
+    background: var(--accent);
     color: #fff;
     font-size: 11px;
     font-weight: 800;
@@ -233,11 +124,10 @@
     border-radius: 12px;
     text-transform: uppercase;
     letter-spacing: 0.5px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
   }
   
   .time-badge {
-    background: rgba(0,0,0,0.3);
+    background: var(--muted);
     color: #fff;
     font-size: 12px;
     padding: 4px 10px;
@@ -247,54 +137,30 @@
   }
   
   .stage-info h2 {
+    font-family: 'Poppins', 'Noto Sans KR', system-ui, -apple-system, sans-serif;
+    font-weight: 700;
     margin: 0 0 6px;
     font-size: 24px;
-    color: #fff;
-    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+    color: var(--text);
   }
   
   .desc {
     margin: 0;
     font-size: 13px;
-    opacity: 0.85;
     font-family: system-ui;
     font-weight: 500;
+    color: var(--muted);
   }
   
-  /* 히든 스테이지 특별 효과 */
-  .stage-card:nth-child(6) {
-    background: linear-gradient(135deg, rgba(102,126,234,0.3) 0%, rgba(118,75,162,0.3) 100%);
-    border: 2px solid rgba(255,255,255,0.4);
-    box-shadow: 0 0 30px rgba(102,126,234,0.5), 0 8px 32px rgba(0,0,0,0.3);
-    animation: fadeIn 0.6s ease-out backwards, glow 2s ease-in-out infinite;
-  }
-  
-  @keyframes glow {
-    0%, 100% { box-shadow: 0 0 20px rgba(102,126,234,0.5), 0 8px 32px rgba(0,0,0,0.3); }
-    50% { box-shadow: 0 0 40px rgba(102,126,234,0.8), 0 8px 32px rgba(0,0,0,0.3); }
-  }
-  
-  /* 반응형 */
-  @media (max-width: 360px) {
-    .title { font-size: 36px; }
-    .stage-icon { width: 70px; height: 70px; min-width: 70px; font-size: 35px; }
-    .stage-info h2 { font-size: 20px; }
-    .stage-content { padding: 14px; }
-  }
-  
-  /* 터치 피드백 */
-  @media (hover: none) and (pointer: coarse) {
-    .stage-card:hover {
-      transform: none;
-    }
-  }
 </style>
 </head>
 <body>
   <main class="container">
     <header class="header">
-      <h1 class="title"><span class="title-glow">🎮 STAGE SELECT</span></h1>
-      <p class="sub">⏱ 1~4단계: 1분 제한 | 5단계: 무한 모드</p>
+      <h1 class="title">
+         STAGE SELECT
+      </h1>
+      <p class="sub">⏱ 범뮤와 함께 신나는 모험을</p>
     </header>
 
     <section class="stage-selection">
@@ -304,10 +170,10 @@
           <div class="stage-icon"><img src="asset/stage/stage1.png" alt="Stage 1 Icon" style="width:100%; height:100%; object-fit:cover; border-radius:16px;"></div>
           <div class="stage-info">
             <div class="stage-header">
-              <span class="badge">초급</span>
+              <span class="badge">1단계</span>
               <span class="time-badge">⏱ 1분</span>
             </div>
-            <h2>초급 스테이지</h2>
+            <h2>범뮤의 수학 교실</h2>
             <p class="desc">기본적인 구구단 문제</p>
           </div>
         </div>
@@ -319,10 +185,10 @@
           <div class="stage-icon"><img src="asset/stage/stage2.png" alt="Stage 2 Icon" style="width:100%; height:100%; object-fit:cover; border-radius:16px;"></div>
           <div class="stage-info">
             <div class="stage-header">
-              <span class="badge">중급</span>
+              <span class="badge">2단계</span>
               <span class="time-badge">⏱ 1분</span>
             </div>
-            <h2>중급 스테이지</h2>
+            <h2>범뮤의 여름 방학</h2>
             <p class="desc">조금 더 어려운 구구단</p>
           </div>
         </div>
@@ -334,10 +200,10 @@
           <div class="stage-icon"><img src="asset/stage/stage3.png" alt="Stage 3 Icon" style="width:100%; height:100%; object-fit:cover; border-radius:16px;"></div>
           <div class="stage-info">
             <div class="stage-header">
-              <span class="badge">고급</span>
+              <span class="badge">3단계</span>
               <span class="time-badge">⏱ 1분</span>
             </div>
-            <h2>고급 스테이지</h2>
+            <h2>범뮤 왕자님의 하루</h2>
             <p class="desc">헷갈리는 구구단 문제</p>
           </div>
         </div>
@@ -346,13 +212,13 @@
       <!-- Stage 4 -->
       <a href="minigame/stage4.html" class="stage-card">
         <div class="stage-content">
-          <div class="stage-icon"><img src="asset/stage/stage4.png" alt="Stage 4 Icon" style="width:100%; height:100%; object-fit:cover; border-radius:16px;"></div>
+          <div class="stage-icon"><img src="asset/stage/stage4.png" alt="Stage 4 Icon" style="width:100%; height:100%; object-fit:cover; border-radius:16px;"></div>   
           <div class="stage-info">
             <div class="stage-header">
               <span class="badge">전문가</span>
               <span class="time-badge">⏱ 1분</span>
             </div>
-            <h2>전문가 스테이지</h2>
+            <h2>두근두근 범뮤의 첫 공연</h2>
             <p class="desc">시간 제한! 순발력 테스트</p>
           </div>
         </div>
@@ -364,15 +230,14 @@
           <div class="stage-icon"><img src="asset/stage/stage5.png" alt="Stage 5 Icon" style="width:100%; height:100%; object-fit:cover; border-radius:16px;"></div>
           <div class="stage-info">
             <div class="stage-header">
-              <span class="badge">최종 보스</span>
+              <span class="badge">5단계</span>
               <span class="time-badge">∞ 무한</span>
             </div>
-            <h2>최종 보스</h2>
+            <h2>용사 범뮤의 도전</h2>
             <p class="desc">모든 구구단의 정복 · 무한 모드</p>
           </div>
         </div>
       </a>
-
     </section>
   </main>
 </body>

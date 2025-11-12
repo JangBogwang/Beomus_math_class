@@ -1,11 +1,323 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Stage 1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Stage 1 - 구구단 게임</title>
+    <link rel="icon" href="../asset/stage/stage1.png">
+    <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            background-color: #000;
+            font-family: 'Gaegu', cursive;
+        }
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            max-width: 480px; /* Mobile-like width */
+            margin: 0 auto;
+            background-image: url('../asset/stage/stage1.png');
+            background-size: cover;
+            background-position: center;
+            overflow: hidden;
+        }
+        .loading-screen, .countdown-screen {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            font-size: 2em;
+            z-index: 10;
+        }
+        .countdown {
+            font-size: 5em;
+            animation: countdown-animation 1s infinite;
+        }
+        @keyframes countdown-animation {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.2); opacity: 0.7; }
+        }
+        .game-scene {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        .character {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 150px;
+            height: 225px; /* 2:3 aspect ratio */
+            object-fit: contain; /* Ensure image fits */
+        }
+        .speech-bubble {
+            position: absolute;
+            top: calc(10% + 225px); /* Adjust position based on new character height */
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            border-radius: 20px;
+            padding: 20px;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+            font-size: 2em;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+        }
+        .speech-bubble::before {
+            content: '';
+            position: absolute;
+            top: -19px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 0 20px 20px;
+            border-style: solid;
+            border-color: transparent transparent white;
+        }
+        .answer-choices {
+            position: absolute;
+            bottom: 10%;
+            width: 100%;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            padding: 0 20px;
+        }
+        .choice-card {
+            background: url('../asset/action/book-icon.svg') no-repeat center center;
+            background-size: contain;
+            border-radius: 15px; /* Keep for general card shape */
+            padding: 15px;
+            font-size: 2em;
+            text-align: center;
+            color: #333;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            cursor: pointer;
+            transition: transform 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 120px; /* Adjust height to fit book icon */
+            position: relative;
+        }
+        .choice-card span { /* To hold the text content */
+            position: relative;
+            z-index: 1;
+            background-color: rgba(255, 255, 255, 0.7); /* Semi-transparent background for text */
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+        .timer {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 2em;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 10px;
+        }
+        .score {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 2em;
+            color: white;
+            background: rgba(0,0,0,0.5);
+            padding: 5px 15px;
+            border-radius: 10px;
+        }
+        /* Click Effects */
+        .correct-flash {
+            animation: flash-correct 0.5s;
+        }
+        @keyframes flash-correct {
+            0%, 100% { background-color: #8eff8e; }
+            50% { background-color: white; }
+        }
+        .shake {
+            animation: shake-horizontal 0.5s;
+        }
+        @keyframes shake-horizontal {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+    </style>
 </head>
 <body>
-    <h1>Stage 1</h1>
+    <div class="game-container">
+        <div class="loading-screen">
+            <p>게임을 불러오는 중입니다.</p>
+        </div>
+        <div class="countdown-screen" style="display: none;">
+            <p class="countdown"></p>
+        </div>
+        <div class="game-scene" style="display: none;">
+            <div class="timer">Time: 60</div>
+            <div class="score">Score: 0</div>
+            <img src="../asset/character/normal.png" alt="Normal Character" class="character">
+            <div class="speech-bubble">
+                <p id="question"></p>
+            </div>
+            <div class="answer-choices">
+                <div class="choice-card"><span></span></div>
+                <div class="choice-card"><span></span></div>
+                <div class="choice-card"><span></span></div>
+                <div class="choice-card"><span></span></div>
+            </div>
+        </div>
+    </div>
+
+    <audio id="bgm" loop>
+        <source src="../asset/bgm/stage1.mp3" type="audio/mpeg">
+    </audio>
+
+    <script>
+        const loadingScreen = document.querySelector('.loading-screen');
+        const countdownScreen = document.querySelector('.countdown-screen');
+        const countdownEl = document.querySelector('.countdown');
+        const gameScene = document.querySelector('.game-scene');
+        const bgm = document.getElementById('bgm');
+        const questionEl = document.getElementById('question');
+        const choiceCards = document.querySelectorAll('.choice-card');
+        const timerEl = document.querySelector('.timer');
+        const scoreEl = document.querySelector('.score');
+
+        let score = 0;
+        let timeLeft = 60;
+        let timerInterval;
+        let currentAnswer;
+
+        function preloadResources() {
+            const resources = [
+                '../asset/stage/stage1.png',
+                '../asset/character/normal.png',
+                '../asset/bgm/stage1.mp3'
+            ];
+            let loadedCount = 0;
+            resources.forEach(res => {
+                if (res.endsWith('.png') || res.endsWith('.svg')) {
+                    const img = new Image();
+                    img.src = res;
+                    img.onload = () => {
+                        loadedCount++;
+                        if (loadedCount === resources.length) {
+                            startGame();
+                        }
+                    };
+                } else if (res.endsWith('.mp3')) {
+                    const audio = new Audio();
+                    audio.src = res;
+                    audio.oncanplaythrough = () => {
+                        loadedCount++;
+                        if (loadedCount === resources.length) {
+                            startGame();
+                        }
+                    };
+                }
+            });
+        }
+
+        function startGame() {
+            loadingScreen.style.display = 'none';
+            countdownScreen.style.display = 'flex';
+            let count = 3;
+            countdownEl.textContent = count;
+            const countdownInterval = setInterval(() => {
+                count--;
+                if (count > 0) {
+                    countdownEl.textContent = count;
+                } else {
+                    clearInterval(countdownInterval);
+                    countdownScreen.style.display = 'none';
+                    gameScene.style.display = 'flex';
+                    bgm.play();
+                    startTimer();
+                    generateQuestion();
+                }
+            }, 1000);
+        }
+
+        function startTimer() {
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                timerEl.textContent = `Time: ${timeLeft}`;
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    endGame();
+                }
+            }, 1000);
+        }
+
+        function generateQuestion() {
+            const a = Math.floor(Math.random() * 4) + 2; // 2 to 5
+            const b = Math.floor(Math.random() * 9) + 1; // 1 to 9
+            currentAnswer = a * b;
+            questionEl.textContent = `${a} × ${b} = ?`;
+
+            const choices = generateChoices(currentAnswer);
+            choiceCards.forEach((card, index) => {
+                card.querySelector('span').textContent = choices[index];
+                card.onclick = () => checkAnswer(card, choices[index]);
+            });
+        }
+
+        function generateChoices(correctAnswer) {
+            const choices = new Set([correctAnswer]);
+            while (choices.size < 4) {
+                const wrongAnswer = correctAnswer + Math.floor(Math.random() * 10) - 5;
+                if (wrongAnswer !== correctAnswer && wrongAnswer > 0) {
+                    choices.add(wrongAnswer);
+                }
+            }
+            return Array.from(choices).sort(() => Math.random() - 0.5);
+        }
+
+        function checkAnswer(card, selectedAnswer) {
+            // Remove previous effects
+            card.classList.remove('correct-flash', 'shake');
+
+            if (selectedAnswer === currentAnswer) {
+                score++;
+                scoreEl.textContent = `Score: ${score}`;
+                card.classList.add('correct-flash');
+                setTimeout(generateQuestion, 300); // Wait for flash animation
+            } else {
+                card.classList.add('shake');
+            }
+        }
+
+        function endGame() {
+            bgm.pause();
+            let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
+            if (score >= 10) {
+                endMessage += '<h2>축하합니다! 통과!</h2>';
+            } else {
+                endMessage += '<h2>아쉽지만... 다시 도전해보세요!</h2>';
+            }
+            gameScene.innerHTML = `<div style="text-align: center; color: white; padding-top: 40%;">${endMessage}</div>`;
+        }
+
+        window.onload = preloadResources;
+    </script>
 </body>
 </html>
