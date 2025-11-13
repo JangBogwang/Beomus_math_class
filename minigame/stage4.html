@@ -214,38 +214,40 @@
         /* 공통 스포트라이트 레이어 */
         .stage-spot {
             position: absolute;
-            top: -10%;
-            left: -10%;
-            width: 120%;
-            height: 140%;
+            top: -15%;
+            left: -15%;
+            width: 130%;
+            height: 150%;
             pointer-events: none;
-            opacity: 0.45;
+            opacity: 0.7;                 /* 전체 밝기 ↑ */
             mix-blend-mode: screen;
-            z-index: 1; /* 게임 UI 뒤에 깔림 */
+            z-index: 1;                    /* 게임 UI 뒤에 깔림 */
         }
 
         /* 왼쪽에서 쏘는 핑크/보라 스팟라이트 */
         .stage-spot-left {
-            background: linear-gradient(
-                135deg,
-                rgba(255, 130, 220, 0.9) 0%,
-                rgba(255, 130, 220, 0.4) 35%,
-                transparent 45%
+            background: radial-gradient(
+                circle at 0% 100%,
+                rgba(255, 140, 240, 0.95) 0%,
+                rgba(255, 120, 230, 0.75) 25%,
+                rgba(255, 120, 230, 0.45) 45%,
+                transparent 70%
             );
             transform-origin: 0% 100%;
-            animation: spotLeftMove 6s ease-in-out infinite;
+            animation: spotLeftMove 4.5s ease-in-out infinite;
         }
 
         /* 오른쪽에서 쏘는 블루/민트 스팟라이트 */
         .stage-spot-right {
-            background: linear-gradient(
-                225deg,
-                rgba(130, 190, 255, 0.9) 0%,
-                rgba(130, 190, 255, 0.4) 35%,
-                transparent 45%
+            background: radial-gradient(
+                circle at 100% 100%,
+                rgba(130, 210, 255, 0.95) 0%,
+                rgba(120, 190, 255, 0.75) 25%,
+                rgba(120, 190, 255, 0.45) 45%,
+                transparent 70%
             );
             transform-origin: 100% 100%;
-            animation: spotRightMove 6s ease-in-out infinite;
+            animation: spotRightMove 4.5s ease-in-out infinite;
         }
 
         /* 전체 배경에 부드러운 색 물결 조명 */
@@ -254,43 +256,79 @@
             inset: 0;
             pointer-events: none;
             z-index: 2;
-            background: radial-gradient(circle at 20% 80%, rgba(255, 180, 255, 0.25), transparent 60%),
-                        radial-gradient(circle at 80% 20%, rgba(160, 160, 255, 0.25), transparent 60%);
-            animation: colorWave 8s ease-in-out infinite alternate;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(255, 180, 255, 0.45), transparent 65%),
+                radial-gradient(circle at 80% 20%, rgba(160, 180, 255, 0.45), transparent 65%),
+                radial-gradient(circle at 50% 10%, rgba(255, 255, 200, 0.35), transparent 70%);
+            animation: colorWave 6s ease-in-out infinite alternate;
             mix-blend-mode: screen;
         }
 
-        /* 왼쪽 스팟 움직임 (살짝 회전 + 흔들림) */
+        /* 왼쪽 스팟 움직임 (더 큰 회전 + 살짝 줌) */
         @keyframes spotLeftMove {
-            0%   { transform: translateX(-10%) rotate(-18deg); opacity: 0.35; }
-            25%  { transform: translateX(0%) rotate(-10deg); opacity: 0.6; }
-            50%  { transform: translateX(5%) rotate(-5deg); opacity: 0.5; }
-            75%  { transform: translateX(-3%) rotate(-12deg); opacity: 0.6; }
-            100% { transform: translateX(-10%) rotate(-18deg); opacity: 0.35; }
+            0% {
+                transform: translateX(-12%) rotate(-20deg) scale(1);
+                opacity: 0.5;
+            }
+            25% {
+                transform: translateX(-4%) rotate(-12deg) scale(1.05);
+                opacity: 0.85;
+            }
+            50% {
+                transform: translateX(4%) rotate(-6deg) scale(1.1);
+                opacity: 1;
+            }
+            75% {
+                transform: translateX(-2%) rotate(-14deg) scale(1.03);
+                opacity: 0.9;
+            }
+            100% {
+                transform: translateX(-12%) rotate(-20deg) scale(1);
+                opacity: 0.5;
+            }
         }
 
         /* 오른쪽 스팟 움직임 */
         @keyframes spotRightMove {
-            0%   { transform: translateX(10%) rotate(18deg); opacity: 0.35; }
-            25%  { transform: translateX(0%) rotate(10deg); opacity: 0.6; }
-            50%  { transform: translateX(-5%) rotate(5deg); opacity: 0.5; }
-            75%  { transform: translateX(3%) rotate(12deg); opacity: 0.6; }
-            100% { transform: translateX(10%) rotate(18deg); opacity: 0.35; }
-        }
-
-        /* 배경 색조가 보라/파랑 계열로 천천히 변화 */
-        @keyframes colorWave {
             0% {
-                opacity: 0.25;
-                filter: hue-rotate(0deg) saturate(1.1);
+                transform: translateX(12%) rotate(20deg) scale(1);
+                opacity: 0.5;
+            }
+            25% {
+                transform: translateX(4%) rotate(12deg) scale(1.05);
+                opacity: 0.85;
             }
             50% {
-                opacity: 0.4;
-                filter: hue-rotate(20deg) saturate(1.3);
+                transform: translateX(-4%) rotate(6deg) scale(1.1);
+                opacity: 1;
+            }
+            75% {
+                transform: translateX(2%) rotate(14deg) scale(1.03);
+                opacity: 0.9;
             }
             100% {
-                opacity: 0.3;
-                filter: hue-rotate(-15deg) saturate(1.2);
+                transform: translateX(12%) rotate(20deg) scale(1);
+                opacity: 0.5;
+            }
+        }
+
+        /* 배경 색조가 더 과감하게 바뀌도록 */
+        @keyframes colorWave {
+            0% {
+                opacity: 0.45;
+                filter: hue-rotate(0deg) saturate(1.2) brightness(1);
+            }
+            35% {
+                opacity: 0.7;
+                filter: hue-rotate(25deg) saturate(1.4) brightness(1.1);
+            }
+            70% {
+                opacity: 0.6;
+                filter: hue-rotate(-20deg) saturate(1.5) brightness(1.05);
+            }
+            100% {
+                opacity: 0.5;
+                filter: hue-rotate(10deg) saturate(1.3) brightness(1);
             }
         }
 
@@ -426,8 +464,16 @@
         let numberTimeoutId = null;
         let isFirstQuestion = true;
 
-        // 노래하는 듯한 대사 (5초마다 변경)
+
         const LYRICS = [
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,            
 `구구단 리듬 타고
 살금살금 춤을 춰~`,
 `하나 둘 셋 넷!
