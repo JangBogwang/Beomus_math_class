@@ -209,51 +209,99 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
             20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
-        /* ===== 아이돌 공연 조명 레이어 ===== */
-        .stage-light {
+        /* ===== K-POP 콘서트 무대 조명 ===== */
+
+        /* 공통 스포트라이트 레이어 */
+        .stage-spot {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            top: -10%;
+            left: -10%;
+            width: 120%;
+            height: 140%;
             pointer-events: none;
-            background: radial-gradient(circle at 50% 20%, rgba(255,255,200,0.25), rgba(255,100,200,0.05), rgba(0,0,0,0));
-            animation: stageLightPulse 3s ease-in-out infinite;
+            opacity: 0.45;
             mix-blend-mode: screen;
-            z-index: 3;
+            z-index: 1; /* 게임 UI 뒤에 깔림 */
         }
 
-        /* 부드러운 조명 펄스 효과 */
-        @keyframes stageLightPulse {
-            0%   { opacity: 0.3; transform: scale(1); }
-            50%  { opacity: 0.55; transform: scale(1.2); }
-            100% { opacity: 0.3; transform: scale(1); }
+        /* 왼쪽에서 쏘는 핑크/보라 스팟라이트 */
+        .stage-spot-left {
+            background: linear-gradient(
+                135deg,
+                rgba(255, 130, 220, 0.9) 0%,
+                rgba(255, 130, 220, 0.4) 35%,
+                transparent 70%
+            );
+            transform-origin: 0% 100%;
+            animation: spotLeftMove 6s ease-in-out infinite;
         }
 
-        /* ===== 아이돌 스트로브 플래시 효과 ===== */
-        .stage-flash {
+        /* 오른쪽에서 쏘는 블루/민트 스팟라이트 */
+        .stage-spot-right {
+            background: linear-gradient(
+                225deg,
+                rgba(130, 190, 255, 0.9) 0%,
+                rgba(130, 190, 255, 0.4) 35%,
+                transparent 70%
+            );
+            transform-origin: 100% 100%;
+            animation: spotRightMove 6s ease-in-out infinite;
+        }
+
+        /* 전체 배경에 부드러운 색 물결 조명 */
+        .stage-color-wave {
             position: absolute;
-            top: 0; left: 0;
-            width: 100%; height: 100%;
+            inset: 0;
             pointer-events: none;
-            background: white;
-            opacity: 0;
-            z-index: 4;
-            animation: stageFlash 8s infinite;
+            z-index: 2;
+            background: radial-gradient(circle at 20% 80%, rgba(255, 180, 255, 0.25), transparent 60%),
+                        radial-gradient(circle at 80% 20%, rgba(160, 160, 255, 0.25), transparent 60%);
+            animation: colorWave 8s ease-in-out infinite alternate;
+            mix-blend-mode: screen;
         }
 
-        /* 깜박이는 플래시 */
-        @keyframes stageFlash {
-            0%, 85% { opacity: 0; }
-            86% { opacity: 0.7; }
-            87% { opacity: 0; }
-            95% { opacity: 0.5; }
-            96% { opacity: 0; }
+        /* 왼쪽 스팟 움직임 (살짝 회전 + 흔들림) */
+        @keyframes spotLeftMove {
+            0%   { transform: translateX(-10%) rotate(-18deg); opacity: 0.35; }
+            25%  { transform: translateX(0%) rotate(-10deg); opacity: 0.6; }
+            50%  { transform: translateX(5%) rotate(-5deg); opacity: 0.5; }
+            75%  { transform: translateX(-3%) rotate(-12deg); opacity: 0.6; }
+            100% { transform: translateX(-10%) rotate(-18deg); opacity: 0.35; }
+        }
+
+        /* 오른쪽 스팟 움직임 */
+        @keyframes spotRightMove {
+            0%   { transform: translateX(10%) rotate(18deg); opacity: 0.35; }
+            25%  { transform: translateX(0%) rotate(10deg); opacity: 0.6; }
+            50%  { transform: translateX(-5%) rotate(5deg); opacity: 0.5; }
+            75%  { transform: translateX(3%) rotate(12deg); opacity: 0.6; }
+            100% { transform: translateX(10%) rotate(18deg); opacity: 0.35; }
+        }
+
+        /* 배경 색조가 보라/파랑 계열로 천천히 변화 */
+        @keyframes colorWave {
+            0% {
+                opacity: 0.25;
+                filter: hue-rotate(0deg) saturate(1.1);
+            }
+            50% {
+                opacity: 0.4;
+                filter: hue-rotate(20deg) saturate(1.3);
+            }
+            100% {
+                opacity: 0.3;
+                filter: hue-rotate(-15deg) saturate(1.2);
+            }
         }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div class="stage-light"></div>
-        <div class="stage-flash"></div> 
+        <!-- 🔥 K-POP 무대 조명 레이어들 -->
+        <div class="stage-spot stage-spot-left"></div>
+        <div class="stage-spot stage-spot-right"></div>
+        <div class="stage-color-wave"></div>
+
         <div class="loading-screen"><p>게임을 불러오는 중입니다.</p></div>
         <div class="countdown-screen" style="display: none;"><p class="countdown"></p></div>
 
