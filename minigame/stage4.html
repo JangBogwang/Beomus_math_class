@@ -293,6 +293,70 @@
                 filter: hue-rotate(-15deg) saturate(1.2);
             }
         }
+
+        /* ===== 정답 연출: 컬러 웨이브 ===== */
+        .success-wave {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            z-index: 3;
+            opacity: 0;
+            mix-blend-mode: screen;
+            background:
+                radial-gradient(circle at 20% 80%, rgba(255, 180, 255, 0.45), transparent 60%),
+                radial-gradient(circle at 80% 20%, rgba(160, 190, 255, 0.45), transparent 60%);
+        }
+
+        .success-wave.active {
+            animation: successWave 0.6s ease-out;
+        }
+
+        @keyframes successWave {
+            0%   { opacity: 0; transform: scale(0.9); }
+            20%  { opacity: 0.9; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.1); }
+        }
+
+        /* ===== 정답 연출: 파티클(응원봉 조각) ===== */
+        .success-particles {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 4;
+        }
+
+        .success-particles .particle {
+            position: absolute;
+            bottom: 18%;
+            width: 8px;
+            height: 16px;
+            border-radius: 999px;
+            background: linear-gradient(to top,
+                rgba(255, 200, 255, 1),
+                rgba(150, 160, 255, 1)
+            );
+            opacity: 0;
+            transform: translateY(0) scale(0.7);
+            animation: particleUp 0.7s ease-out forwards;
+        }
+
+        @keyframes particleUp {
+            0%   { opacity: 0; transform: translateY(0) scale(0.7); }
+            20%  { opacity: 1; }
+            100% { opacity: 0; transform: translateY(-120px) scale(1.1); }
+        }
+
+        /* ===== 정답 연출: 카드 POP 효과 ===== */
+        .answer-card.success-pop {
+            animation: successPop 0.35s ease-out;
+        }
+
+        @keyframes successPop {
+            0%   { transform: scale(1); box-shadow: 0 0 25px rgba(255, 200, 0, 0.7); }
+            40%  { transform: scale(1.12); box-shadow: 0 0 40px rgba(255, 230, 150, 1); }
+            100% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 200, 0, 0.7); }
+        }
     </style>
 </head>
 <body>
@@ -452,7 +516,51 @@
         function succeed() {
             score++;
             scoreEl.textContent = `Score: ${score}`;
+            triggerSuccessEffects();
             generateQuestion();
+        }
+
+        function triggerSuccessEffects() {
+            // 1) 카드 POP
+            answerCard.classList.remove('pulse', 'beat'); // 한 번 멈췄다가
+            answerCard.classList.add('success-pop');
+            setTimeout(() => {
+                answerCard.classList.remove('success-pop');
+            }, 350);
+
+            // 2) 컬러 웨이브
+            const wave = document.querySelector('.success-wave');
+            if (wave) {
+                wave.classList.remove('active');
+                void wave.offsetWidth; // 리플로우로 애니메이션 리셋
+                wave.classList.add('active');
+            }
+
+            // 3) 파티클 생성
+            const container = document.querySelector('.success-particles');
+            if (container) {
+                container.innerHTML = '';
+                const particleCount = 12;
+
+                for (let i = 0; i < particleCount; i++) {
+                    const p = document.createElement('span');
+                    p.className = 'particle';
+
+                    // 카드 근처에서 랜덤하게 출발하도록
+                    const startX = 30 + Math.random() * 40; // 30% ~ 70%
+                    const delay = Math.random() * 0.2;      // 0~0.2초 랜덤 딜레이
+
+                    p.style.left = `${startX}%`;
+                    p.style.animationDelay = `${delay}s`;
+
+                    container.appendChild(p);
+                }
+
+                // 파티클는 animation 끝나면 자동으로 사라지게 DOM 정리
+                setTimeout(() => {
+                    container.innerHTML = '';
+                }, 800);
+            }
         }
 
         function fail() {
