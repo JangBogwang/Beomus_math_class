@@ -247,6 +247,7 @@
     </audio>
 
     <script>
+        let isPaused = false;  
         const gameScene = document.querySelector('.game-scene');
         const bgm = document.getElementById('bgm');
         const timerEl = document.querySelector('.timer');
@@ -317,13 +318,14 @@
         }
 
         function showCurrentNumber() {
+            if (isPaused) return; // 1초 정지 상태면 숫자 바꾸지 않음
+
             const value = candidateNumbers[numberIndex];
             answerNumberEl.textContent = value;
             answerCard.dataset.value = value;
 
-            // 리듬 타는 듯한 효과
             answerCard.classList.remove('pulse', 'beat');
-            void answerCard.offsetWidth; // reflow로 애니메이션 재시작 꼼수
+            void answerCard.offsetWidth;
             answerCard.classList.add('pulse', 'beat');
         }
 
@@ -333,14 +335,25 @@
                 numberInterval = null;
             }
 
-            const a = Math.floor(Math.random() * 8) + 2;   // 2~9
-            const b = Math.floor(Math.random() * 9) + 1;   // 1~9
+            const a = Math.floor(Math.random() * 8) + 2;
+            const b = Math.floor(Math.random() * 9) + 1;
             currentAnswer = a * b;
 
             questionDisplay.textContent = `${a} × ${b} 의 답이 나올 때 탭!`;
 
             candidateNumbers = generateChoices(currentAnswer);
-            setupNumberCycle();
+            numberIndex = 0;
+
+            // 문제 바뀌면 즉시 첫 숫자 출력
+            showCurrentNumber();
+
+            // 🔥 첫 카운트는 2초 대기 후 시작! 🔥
+            setTimeout(() => {
+                numberInterval = setInterval(() => {
+                    numberIndex = (numberIndex + 1) % candidateNumbers.length;
+                    showCurrentNumber();
+                }, 1000);
+            }, 2000);
         }
 
         function succeed() {
@@ -350,12 +363,19 @@
         }
 
         function fail() {
-            // 틀리면 점수 1 감소 (0 밑으로는 안 내려감)
             answerCard.classList.add('shake');
             setTimeout(() => answerCard.classList.remove('shake'), 400);
+
             if (score > 0) score--;
             scoreEl.textContent = `Score: ${score}`;
-            // 문제는 유지, 계속 리듬에 맞춰 도전
+
+            // 🔥 1초 정지 기능 추가 🔥
+            isPaused = true;
+
+            // 기존 numberInterval은 정지하지 않고 숫자만 안 바뀌게 함
+            setTimeout(() => {
+                isPaused = false;
+            }, 1000);
         }
 
         answerCard.addEventListener('click', () => {
