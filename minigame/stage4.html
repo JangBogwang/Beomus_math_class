@@ -230,7 +230,7 @@
                 135deg,
                 rgba(255, 130, 220, 0.9) 0%,
                 rgba(255, 130, 220, 0.4) 35%,
-                transparent 50%
+                transparent 45%
             );
             transform-origin: 0% 100%;
             animation: spotLeftMove 6s ease-in-out infinite;
@@ -242,7 +242,7 @@
                 225deg,
                 rgba(130, 190, 255, 0.9) 0%,
                 rgba(130, 190, 255, 0.4) 35%,
-                transparent 60%
+                transparent 45%
             );
             transform-origin: 100% 100%;
             animation: spotRightMove 6s ease-in-out infinite;
@@ -299,12 +299,13 @@
             position: absolute;
             inset: 0;
             pointer-events: none;
-            z-index: 3;
+            z-index: 10;
             opacity: 0;
             mix-blend-mode: screen;
             background:
-                radial-gradient(circle at 20% 80%, rgba(255, 180, 255, 0.45), transparent 60%),
-                radial-gradient(circle at 80% 20%, rgba(160, 190, 255, 0.45), transparent 60%);
+            radial-gradient(circle at 20% 80%, rgba(255, 150, 255, 0.7), transparent 65%),
+            radial-gradient(circle at 80% 20%, rgba(130, 180, 255, 0.7), transparent 65%),
+            radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.4), transparent 70%);
         }
 
         .success-wave.active {
@@ -312,9 +313,9 @@
         }
 
         @keyframes successWave {
-            0%   { opacity: 0; transform: scale(0.9); }
-            20%  { opacity: 0.9; transform: scale(1); }
-            100% { opacity: 0; transform: scale(1.1); }
+            0%   { opacity: 0; transform: scale(0.8); }
+            20%  { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(1.2); }
         }
 
         /* ===== 정답 연출: 파티클(응원봉 조각) ===== */
@@ -323,7 +324,7 @@
             inset: 0;
             pointer-events: none;
             overflow: hidden;
-            z-index: 4;
+            z-index: 16;
         }
 
         .success-particles .particle {
@@ -344,7 +345,7 @@
         @keyframes particleUp {
             0%   { opacity: 0; transform: translateY(0) scale(0.7); }
             20%  { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-120px) scale(1.1); }
+            100% { opacity: 0; transform: translateY(-130px) scale(1.1); }
         }
 
         /* ===== 정답 연출: 카드 POP 효과 ===== */
@@ -354,7 +355,7 @@
 
         @keyframes successPop {
             0%   { transform: scale(1); box-shadow: 0 0 25px rgba(255, 200, 0, 0.7); }
-            40%  { transform: scale(1.12); box-shadow: 0 0 40px rgba(255, 230, 150, 1); }
+            40%  { transform: scale(1.18); box-shadow: 0 0 45px rgba(255, 230, 150, 1); }
             100% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 200, 0, 0.7); }
         }
     </style>
@@ -365,6 +366,9 @@
         <div class="stage-spot stage-spot-left"></div>
         <div class="stage-spot stage-spot-right"></div>
         <div class="stage-color-wave"></div>
+        <!-- ✅ 정답 연출: 전체 화면 웨이브 + 파티클 -->       
+        <div class="success-wave"></div>
+        <div class="success-particles"></div>
 
         <div class="loading-screen"><p>게임을 불러오는 중입니다.</p></div>
         <div class="countdown-screen" style="display: none;"><p class="countdown"></p></div>
@@ -419,6 +423,7 @@
         let candidateNumbers = [];
         let numberIndex = 0;
         let numberInterval = null;
+        let numberTimeoutId = null;
         let isFirstQuestion = true;
 
         // 노래하는 듯한 대사 (5초마다 변경)
@@ -461,36 +466,42 @@
             return Array.from(set).sort(() => Math.random() - 0.5);
         }
 
-        function setupNumberCycle() {
-            if (numberInterval) clearInterval(numberInterval);
-            numberIndex = 0;
-            showCurrentNumber();
-            numberInterval = setInterval(() => {
-                numberIndex = (numberIndex + 1) % candidateNumbers.length;
-                showCurrentNumber();
-            }, 1000);
-        }
-
         function showCurrentNumber() {
-            if (isPaused) return; // 1초 정지 상태면 숫자 바꾸지 않음
-
             const value = candidateNumbers[numberIndex];
             answerNumberEl.textContent = value;
             answerCard.dataset.value = value;
+        }
 
+        function bounceCard() {
+            // 1초마다 리듬용 바운스
             answerCard.classList.remove('pulse', 'beat');
-            void answerCard.offsetWidth;
+            void answerCard.offsetWidth;       // 애니메이션 리셋
             answerCard.classList.add('pulse', 'beat');
         }
 
+        function startBounce() {
+            // 바로 한 번 튕기고, 이후 1초마다 반복
+            bounceCard();
+            bounceInterval = setInterval(bounceCard, 1000);
+        }
+
+
         function generateQuestion() {
+            // 이전 숫자 루프/딜레이 싹 정리
             if (numberInterval) {
                 clearInterval(numberInterval);
                 numberInterval = null;
             }
+            if (numberTimeoutId) {
+                clearTimeout(numberTimeoutId);
+                numberTimeoutId = null;
+            }
 
-            const a = Math.floor(Math.random() * 8) + 2;
-            const b = Math.floor(Math.random() * 9) + 1;
+            // 새 문제에서는 정지 상태 해제
+            isPaused = false;
+
+            const a = Math.floor(Math.random() * 8) + 2;  // 2~9
+            const b = Math.floor(Math.random() * 9) + 1;  // 1~9
             currentAnswer = a * b;
 
             questionDisplay.textContent = `${a} × ${b} 의 답이 나올 때 탭!`;
@@ -501,17 +512,22 @@
             // 문제 바뀌면 바로 첫 숫자 한 번 보여주기
             showCurrentNumber();
 
-            // 🔥 첫 문제의 첫 간격만 2초, 이후 문제들은 1초 간격으로 시작
-            const firstGap = isFirstQuestion ? 2000 : 1000; // ms
+            // 첫 문제만 2초 딜레이, 이후 문제는 1초 후부터 숫자 순환
+            const firstGap = isFirstQuestion ? 2000 : 1000;
             isFirstQuestion = false;
 
-            setTimeout(() => {
+            numberTimeoutId = setTimeout(() => {
                 numberInterval = setInterval(() => {
-                    numberIndex = (numberIndex + 1) % candidateNumbers.length;
-                    showCurrentNumber();
-                }, 1000); // 이후부터는 항상 1초 간격
+                    if (isPaused) {
+                        // 오답으로 일시정지 상태면 숫자만 멈춤 (바운스는 계속됨)
+                        return;
+                }
+                numberIndex = (numberIndex + 1) % candidateNumbers.length;
+                showCurrentNumber();
+                }, 1000);
             }, firstGap);
         }
+
 
         function succeed() {
             score++;
@@ -521,34 +537,38 @@
         }
 
         function triggerSuccessEffects() {
+            console.log("✅ triggerSuccessEffects 호출됨"); // 디버그 확인용
+
             // 1) 카드 POP
-            answerCard.classList.remove('pulse', 'beat'); // 한 번 멈췄다가
+            answerCard.classList.remove('pulse', 'beat'); // 기존 리듬 효과 잠깐 리셋
             answerCard.classList.add('success-pop');
             setTimeout(() => {
                 answerCard.classList.remove('success-pop');
             }, 350);
 
-            // 2) 컬러 웨이브
+            // 2) 전체 화면 컬러 웨이브
             const wave = document.querySelector('.success-wave');
             if (wave) {
                 wave.classList.remove('active');
-                void wave.offsetWidth; // 리플로우로 애니메이션 리셋
+                void wave.offsetWidth; // 강제로 리플로우해서 애니메이션 리셋
                 wave.classList.add('active');
+            } else {
+                console.warn("⚠ .success-wave 요소를 찾을 수 없음");
             }
 
             // 3) 파티클 생성
             const container = document.querySelector('.success-particles');
             if (container) {
                 container.innerHTML = '';
-                const particleCount = 12;
+                const particleCount = 14;
 
                 for (let i = 0; i < particleCount; i++) {
                     const p = document.createElement('span');
                     p.className = 'particle';
 
-                    // 카드 근처에서 랜덤하게 출발하도록
+                    // 카드 중앙 기준 근처에서 랜덤 출발
                     const startX = 30 + Math.random() * 40; // 30% ~ 70%
-                    const delay = Math.random() * 0.2;      // 0~0.2초 랜덤 딜레이
+                    const delay = Math.random() * 0.2;      // 0 ~ 0.2초 랜덤 딜레이
 
                     p.style.left = `${startX}%`;
                     p.style.animationDelay = `${delay}s`;
@@ -556,12 +576,15 @@
                     container.appendChild(p);
                 }
 
-                // 파티클는 animation 끝나면 자동으로 사라지게 DOM 정리
+                // 0.8초 뒤 DOM 정리
                 setTimeout(() => {
                     container.innerHTML = '';
                 }, 800);
+            } else {
+                console.warn("⚠ .success-particles 요소를 찾을 수 없음");
             }
         }
+
 
         function fail() {
             answerCard.classList.add('shake');
@@ -570,10 +593,8 @@
             if (score > 0) score--;
             scoreEl.textContent = `Score: ${score}`;
 
-            // 🔥 1초 정지 기능 추가 🔥
+            // 1초 정지 (숫자만 멈춤)
             isPaused = true;
-
-            // 기존 numberInterval은 정지하지 않고 숫자만 안 바뀌게 함
             setTimeout(() => {
                 isPaused = false;
             }, 1000);
@@ -593,7 +614,7 @@
             if (timerInterval) clearInterval(timerInterval);
             if (numberInterval) clearInterval(numberInterval);
             if (lyricInterval) clearInterval(lyricInterval);
-
+            if (bounceInterval) clearInterval(bounceInterval); 
             let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
             if (score >= 10) {
                 endMessage += '<h2>완전 리듬 천재! 통과!</h2>';
@@ -646,6 +667,7 @@
                     bgm.play().catch(() => {});
                     startTimer();
                     startLyrics();
+                    startBounce();  
                     generateQuestion();
                 }
             }, 1000);
