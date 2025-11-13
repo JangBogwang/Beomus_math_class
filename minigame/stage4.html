@@ -27,6 +27,15 @@
             background-position: center;
             overflow: hidden;
         }
+
+        .game-container::before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.35); /* ← 어둡기 조절 (0.25~0.45 추천) */
+            z-index: 0; 
+        }
+
         .loading-screen, .countdown-screen {
             position: absolute;
             top: 0;
