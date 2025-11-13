@@ -209,10 +209,51 @@
             10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
             20%, 40%, 60%, 80% { transform: translateX(10px); }
         }
+        /* ===== 아이돌 공연 조명 레이어 ===== */
+        .stage-light {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            background: radial-gradient(circle at 50% 20%, rgba(255,255,200,0.25), rgba(255,100,200,0.05), rgba(0,0,0,0));
+            animation: stageLightPulse 3s ease-in-out infinite;
+            mix-blend-mode: screen;
+            z-index: 3;
+        }
+
+        /* 부드러운 조명 펄스 효과 */
+        @keyframes stageLightPulse {
+            0%   { opacity: 0.3; transform: scale(1); }
+            50%  { opacity: 0.55; transform: scale(1.2); }
+            100% { opacity: 0.3; transform: scale(1); }
+        }
+
+        /* ===== 아이돌 스트로브 플래시 효과 ===== */
+        .stage-flash {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            background: white;
+            opacity: 0;
+            z-index: 4;
+            animation: stageFlash 8s infinite;
+        }
+
+        /* 깜박이는 플래시 */
+        @keyframes stageFlash {
+            0%, 85% { opacity: 0; }
+            86% { opacity: 0.7; }
+            87% { opacity: 0; }
+            95% { opacity: 0.5; }
+            96% { opacity: 0; }
+        }
     </style>
 </head>
 <body>
     <div class="game-container">
+        <div class="stage-light"></div>
+        <div class="stage-flash"></div> 
         <div class="loading-screen"><p>게임을 불러오는 중입니다.</p></div>
         <div class="countdown-screen" style="display: none;"><p class="countdown"></p></div>
 
@@ -247,7 +288,6 @@
     </audio>
 
     <script>
-        let isPaused = false;  
         const gameScene = document.querySelector('.game-scene');
         const bgm = document.getElementById('bgm');
         const timerEl = document.querySelector('.timer');
@@ -258,6 +298,7 @@
         const answerCard = document.getElementById('answerCard');
         const answerNumberEl = document.getElementById('answerNumber');
 
+        let isPaused = false;  
         let score = 0;
         let timeLeft = 60;
         let timerInterval = null;
@@ -266,6 +307,7 @@
         let candidateNumbers = [];
         let numberIndex = 0;
         let numberInterval = null;
+        let isFirstQuestion = true;
 
         // 노래하는 듯한 대사 (5초마다 변경)
         const LYRICS = [
@@ -344,16 +386,19 @@
             candidateNumbers = generateChoices(currentAnswer);
             numberIndex = 0;
 
-            // 문제 바뀌면 즉시 첫 숫자 출력
+            // 문제 바뀌면 바로 첫 숫자 한 번 보여주기
             showCurrentNumber();
 
-            // 🔥 첫 카운트는 2초 대기 후 시작! 🔥
+            // 🔥 첫 문제의 첫 간격만 2초, 이후 문제들은 1초 간격으로 시작
+            const firstGap = isFirstQuestion ? 2000 : 1000; // ms
+            isFirstQuestion = false;
+
             setTimeout(() => {
                 numberInterval = setInterval(() => {
                     numberIndex = (numberIndex + 1) % candidateNumbers.length;
                     showCurrentNumber();
-                }, 1000);
-            }, 2000);
+                }, 1000); // 이후부터는 항상 1초 간격
+            }, firstGap);
         }
 
         function succeed() {
