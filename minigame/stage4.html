@@ -32,7 +32,7 @@
             content: "";
             position: absolute;
             inset: 0;
-            background: rgba(0, 0, 0, 0.45); /* ← 어둡기 조절 (0.25~0.45 추천) */
+            background: rgba(0, 0, 0, 0.55); /* ← 어둡기 조절 (0.25~0.45 추천) */
             z-index: 0; 
         }
 
@@ -405,6 +405,26 @@
             40%  { transform: scale(1.18); box-shadow: 0 0 45px rgba(255, 230, 150, 1); }
             100% { transform: scale(1); box-shadow: 0 0 25px rgba(255, 200, 0, 0.7); }
         }
+
+        /* ===== 정답 팝업 ===== */
+        .correct-popup {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 8em;
+            color: #4CAF50;
+            font-weight: bold;
+            z-index: 100;
+            pointer-events: none; /* 클릭 방지 */
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.5);
+            animation: fade-out-popup 1.5s forwards;
+        }
+
+        @keyframes fade-out-popup {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+        }
     </style>
 </head>
 <body>
@@ -451,12 +471,14 @@
     </audio>
 
     <script>
+        const gameContainer = document.querySelector('.game-container');
         const gameScene = document.querySelector('.game-scene');
         const bgm = document.getElementById('bgm');
         const timerEl = document.querySelector('.timer');
         const scoreEl = document.querySelector('.score');
         const questionDisplay = document.getElementById('questionDisplay');
         const dialogueEl = document.getElementById('dialogue');
+        const characterImg = document.querySelector('.character');
 
         const answerCard = document.getElementById('answerCard');
         const answerNumberEl = document.getElementById('answerNumber');
@@ -473,6 +495,14 @@
         let numberTimeoutId = null;
         let isFirstQuestion = true;
 
+        const DANCE_IMAGES = [
+            '../asset/dance/dance1.png',
+            '../asset/dance/dance2.png',
+            '../asset/dance/dance3.png',
+            '../asset/dance/dance4.png',
+            '../asset/dance/dance5.png'
+        ];
+        let danceInterval = null;
 
         const LYRICS = [
 `구구단 리듬 타고
@@ -507,6 +537,13 @@
         function startLyrics() {
             updateDialogue();
             lyricInterval = setInterval(updateDialogue, 5000);
+        }
+
+        function startCharacterDance() {
+            danceInterval = setInterval(() => {
+                const randomIndex = Math.floor(Math.random() * DANCE_IMAGES.length);
+                characterImg.src = DANCE_IMAGES[randomIndex];
+            }, 2000);
         }
 
         function generateChoices(correctAnswer) {
@@ -583,10 +620,21 @@
             }, firstGap);
         }
 
+        function showCorrectAnswerPopup() {
+            const popup = document.createElement('div');
+            popup.textContent = '정답';
+            popup.className = 'correct-popup';
+            gameContainer.appendChild(popup);
+
+            setTimeout(() => {
+                popup.remove();
+            }, 1500);
+        }
 
         function succeed() {
             score++;
             scoreEl.textContent = `Score: ${score}`;
+            showCorrectAnswerPopup();
             triggerSuccessEffects();
             generateQuestion();
         }
@@ -669,7 +717,8 @@
             if (timerInterval) clearInterval(timerInterval);
             if (numberInterval) clearInterval(numberInterval);
             if (lyricInterval) clearInterval(lyricInterval);
-            if (bounceInterval) clearInterval(bounceInterval); 
+            if (bounceInterval) clearInterval(bounceInterval);
+            if (danceInterval) clearInterval(danceInterval);
             let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
             if (score >= 10) {
                 endMessage += '<h2>완전 리듬 천재! 통과!</h2>';
@@ -722,7 +771,8 @@
                     bgm.play().catch(() => {});
                     startTimer();
                     startLyrics();
-                    startBounce();  
+                    startBounce();
+                    startCharacterDance();
                     generateQuestion();
                 }
             }, 1000);
