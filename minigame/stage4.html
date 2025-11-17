@@ -412,7 +412,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            font-size: 8em;
+            font-size: clamp(3em, 12vw, 8em); /* 반응형 폰트 크기 */
             color: #4CAF50;
             font-weight: bold;
             z-index: 100;
@@ -422,8 +422,9 @@
         }
 
         @keyframes fade-out-popup {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5); }
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); color: #4CAF50; }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.2) rotate(5deg); color: #FFD700; }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.5) rotate(-5deg); color: #FF6347; }
         }
     </style>
 </head>
@@ -512,6 +513,22 @@
 `구구단 리듬 타고
 살금살금 춤을 춰~`,
 `구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
+살금살금 춤을 춰~`,
+`구구단 리듬 타고
 살금살금 춤을 춰~`,            
 `구구단 리듬 타고
 살금살금 춤을 춰~`,
@@ -536,7 +553,7 @@
 
         function startLyrics() {
             updateDialogue();
-            lyricInterval = setInterval(updateDialogue, 5000);
+            lyricInterval = setInterval(updateDialogue, 2000);
         }
 
         function startCharacterDance() {
@@ -683,7 +700,8 @@
                 setTimeout(() => {
                     container.innerHTML = '';
                 }, 800);
-            } else {
+            }
+            else {
                 console.warn("⚠ .success-particles 요소를 찾을 수 없음");
             }
         }
@@ -720,9 +738,10 @@
             if (bounceInterval) clearInterval(bounceInterval);
             if (danceInterval) clearInterval(danceInterval);
             let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
-            if (score >= 10) {
+            if (score >= 8) {
                 endMessage += '<h2>완전 리듬 천재! 통과!</h2>';
-            } else {
+            }
+            else {
                 endMessage += '<h2>아쉬워… 한 번만 더 도전해볼까?</h2>';
             }
 
