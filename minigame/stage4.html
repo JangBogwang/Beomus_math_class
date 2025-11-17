@@ -383,8 +383,8 @@
             position: absolute;
             left: 50%;
             top: 50%;
-            width: 5px;
-            height: 5px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             background: var(--color);
             opacity: 0;
@@ -675,19 +675,19 @@
                 console.warn("⚠ .success-wave 요소를 찾을 수 없음");
             }
 
-            // 3) 불꽃놀이 파티클 생성
+            // 3) 불꽃놀이 파티클 생성 (더 크고 화려하게)
             const container = document.querySelector('.success-particles');
             if (container) {
                 container.innerHTML = '';
-                const particleCount = 50; // 불꽃놀이 파티클 개수
-                const colors = ['#FFD700', '#FF6347', '#4CAF50', '#87CEEB', '#FFC0CB'];
+                const particleCount = 80; // 불꽃놀이 파티클 개수 증가
+                const colors = ['#FFD700', '#FF6347', '#4CAF50', '#87CEEB', '#FFC0CB', '#FFFFFF'];
 
                 for (let i = 0; i < particleCount; i++) {
                     const p = document.createElement('span');
                     p.className = 'particle';
 
                     const angle = Math.random() * 360;
-                    const distance = 80 + Math.random() * 50; // 80px ~ 130px
+                    const distance = 100 + Math.random() * 80; // 100px ~ 180px
                     const tx = Math.cos(angle * Math.PI / 180) * distance;
                     const ty = Math.sin(angle * Math.PI / 180) * distance;
                     const color = colors[Math.floor(Math.random() * colors.length)];
@@ -699,10 +699,10 @@
                     container.appendChild(p);
                 }
 
-                // 1초 뒤 DOM 정리
+                // 1.2초 뒤 DOM 정리
                 setTimeout(() => {
                     container.innerHTML = '';
-                }, 1000);
+                }, 1200);
             }
             else {
                 console.warn("⚠ .success-particles 요소를 찾을 수 없음");
