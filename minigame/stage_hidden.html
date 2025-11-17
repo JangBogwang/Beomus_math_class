@@ -588,9 +588,8 @@
         }
 
         function startBounce() {
-            // 바로 한 번 튕기고, 이후 1초마다 반복
             bounceCard();
-            bounceInterval = setInterval(bounceCard, 500);
+            bounceInterval = setInterval(bounceCard, 800);
         }
 
 
@@ -620,8 +619,8 @@
             // 문제 바뀌면 바로 첫 숫자 한 번 보여주기
             showCurrentNumber();
 
-            // 첫 문제만 2초 딜레이, 이후 문제는 1초 후부터 숫자 순환
-            const firstGap = isFirstQuestion ? 1000 : 500;
+            // 첫 문제만 1.6초 딜레이, 이후 문제는 0.8초 후부터 숫자 순환
+            const firstGap = isFirstQuestion ? 1600 : 800;
             isFirstQuestion = false;
 
             numberTimeoutId = setTimeout(() => {
@@ -632,7 +631,7 @@
                 }
                 numberIndex = (numberIndex + 1) % candidateNumbers.length;
                 showCurrentNumber();
-                }, 1000);
+                }, 800);
             }, firstGap);
         }
 
