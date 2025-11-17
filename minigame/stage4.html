@@ -381,23 +381,25 @@
 
         .success-particles .particle {
             position: absolute;
-            bottom: 18%;
-            width: 8px;
-            height: 16px;
-            border-radius: 999px;
-            background: linear-gradient(to top,
-                rgba(255, 200, 255, 1),
-                rgba(150, 160, 255, 1)
-            );
+            left: 50%;
+            top: 50%;
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: var(--color);
             opacity: 0;
-            transform: translateY(0) scale(0.7);
-            animation: particleUp 0.7s ease-out forwards;
+            animation: firework-burst 0.8s ease-out forwards;
         }
 
-        @keyframes particleUp {
-            0%   { opacity: 0; transform: translateY(0) scale(0.7); }
-            20%  { opacity: 1; }
-            100% { opacity: 0; transform: translateY(-130px) scale(1.1); }
+        @keyframes firework-burst {
+            0% {
+                transform: scale(1);
+                opacity: 1;
+            }
+            100% {
+                transform: scale(1.5) translate(var(--tx), var(--ty));
+                opacity: 0;
+            }
         }
 
         /* ===== 정답 연출: 카드 POP 효과 ===== */
@@ -673,34 +675,34 @@
                 console.warn("⚠ .success-wave 요소를 찾을 수 없음");
             }
 
-            // 3) 파티클 생성 (더 화려하게)
+            // 3) 불꽃놀이 파티클 생성
             const container = document.querySelector('.success-particles');
             if (container) {
                 container.innerHTML = '';
-                const particleCount = 30; // 파티클 개수 증가
+                const particleCount = 50; // 불꽃놀이 파티클 개수
+                const colors = ['#FFD700', '#FF6347', '#4CAF50', '#87CEEB', '#FFC0CB'];
 
                 for (let i = 0; i < particleCount; i++) {
                     const p = document.createElement('span');
                     p.className = 'particle';
 
-                    const startX = 20 + Math.random() * 60; // 20% ~ 80%
-                    const delay = Math.random() * 0.3;      // 0 ~ 0.3초 랜덤 딜레이
-                    const duration = 0.6 + Math.random() * 0.4; // 0.6 ~ 1.0초
-                    const size = 8 + Math.random() * 8; // 8px ~ 16px
+                    const angle = Math.random() * 360;
+                    const distance = 80 + Math.random() * 50; // 80px ~ 130px
+                    const tx = Math.cos(angle * Math.PI / 180) * distance;
+                    const ty = Math.sin(angle * Math.PI / 180) * distance;
+                    const color = colors[Math.floor(Math.random() * colors.length)];
 
-                    p.style.left = `${startX}%`;
-                    p.style.width = `${size}px`;
-                    p.style.height = `${size * 2}px`;
-                    p.style.animationDelay = `${delay}s`;
-                    p.style.animationDuration = `${duration}s`;
-
+                    p.style.setProperty('--tx', `${tx}px`);
+                    p.style.setProperty('--ty', `${ty}px`);
+                    p.style.setProperty('--color', color);
+                    
                     container.appendChild(p);
                 }
 
-                // 1.2초 뒤 DOM 정리
+                // 1초 뒤 DOM 정리
                 setTimeout(() => {
                     container.innerHTML = '';
-                }, 1200);
+                }, 1000);
             }
             else {
                 console.warn("⚠ .success-particles 요소를 찾을 수 없음");
