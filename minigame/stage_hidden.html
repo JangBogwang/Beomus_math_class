@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Stage 4 - 구구단 리듬 게임</title>
+    <title>Stage - 구구단 리듬 게임</title>
     <link rel="icon" href="../asset/stage/stage4.png">
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
     <style>
@@ -476,7 +476,7 @@
 
     <!-- Stage4용 BGM (160bpm 느낌으로 제작한 파일을 여기에 배치하시면 됩니다) -->
     <audio id="bgm" loop>
-        <source src="../asset/bgm/stage4.mp3" type="audio/mpeg">
+        <source src="../asset/bgm/stage_hidden.mp3" type="audio/mpeg">
     </audio>
 
     <script>
@@ -494,7 +494,7 @@
 
         let isPaused = false;  
         let score = 0;
-        let timeLeft = 60;
+        let timeLeft = 134;
         let timerInterval = null;
 
         let currentAnswer = null;
@@ -590,7 +590,7 @@
         function startBounce() {
             // 바로 한 번 튕기고, 이후 1초마다 반복
             bounceCard();
-            bounceInterval = setInterval(bounceCard, 1000);
+            bounceInterval = setInterval(bounceCard, 500);
         }
 
 
@@ -621,7 +621,7 @@
             showCurrentNumber();
 
             // 첫 문제만 2초 딜레이, 이후 문제는 1초 후부터 숫자 순환
-            const firstGap = isFirstQuestion ? 2000 : 1000;
+            const firstGap = isFirstQuestion ? 1000 : 500;
             isFirstQuestion = false;
 
             numberTimeoutId = setTimeout(() => {
@@ -741,11 +741,7 @@
             if (bounceInterval) clearInterval(bounceInterval);
             if (danceInterval) clearInterval(danceInterval);
             let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
-            if (score >= 12) {
-                endMessage += '<h2>완전 리듬 천재! 통과!</h2>';
-                localStorage.setItem('stage4_cleared', 'true'); // 히든 스테이지 잠금 해제
-            }
-            else if (score >= 8) {
+            if (score >= 8) {
                 endMessage += '<h2>완전 리듬 천재! 통과!</h2>';
             }
             else {
@@ -758,7 +754,7 @@
                 <div>
                     ${endMessage}
                     <div class="end-screen-btn-group">
-                        <a href="stage4.html" class="end-screen-btn">다시하기</a>
+                        <a href="stage_hidden.html" class="end-screen-btn">다시하기</a>
                         <a href="../select_stage.html" class="end-screen-btn">스테이지 선택으로</a>
                     </div>
                 </div>
