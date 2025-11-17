@@ -741,7 +741,7 @@
             if (bounceInterval) clearInterval(bounceInterval);
             if (danceInterval) clearInterval(danceInterval);
             let endMessage = `<h1>게임 종료!</h1><h2>최종 점수: ${score}</h2>`;
-            if (score >= 12) {
+            if (score >= 15) {
                 endMessage += '<h2>완전 리듬 천재! 통과!</h2>';
                 localStorage.setItem('stage4_cleared', 'true'); // 히든 스테이지 잠금 해제
             }

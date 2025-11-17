@@ -248,12 +248,22 @@
               <span class="badge">히든 스테이지</span>
               <span class="time-badge">???</span>
             </div>
-            <h2>???</h2>
+            <h2>베테랑 아이돌 범뮤</h2>
             <p class="desc">???</p>
           </div>
         </div>
       </a>
     </section>
   </main>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      if (localStorage.getItem('stage4_cleared') === 'true') {
+        const hiddenStage = document.getElementById('hidden-stage');
+        if (hiddenStage) {
+          hiddenStage.style.display = 'block';
+        }
+      }
+    });
+  </script>
 </body>
 </html>
