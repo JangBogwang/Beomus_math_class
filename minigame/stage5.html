@@ -48,9 +48,10 @@
 
         .characters-container {
             position: absolute;
-            bottom: 20%; /* Adjusted to be higher up from the bottom */
+            top: 55%; /* Moved lower as requested */
             left: 0;
             width: 100%;
+            transform: translateY(-50%); /* Center vertically relative to its own height */
             display: flex;
             justify-content: space-between;
             padding: 0 5%;
@@ -63,7 +64,6 @@
             flex-direction: column;
             align-items: center;
             width: 40%; /* Increased character wrapper width */
-            /* Removed position: relative; as HP is now stacked */
         }
 
         #warrior, #demon {
@@ -79,7 +79,6 @@
         
         .hp {
             background: #fff;
-            /* Removed position: absolute; top: -30px; */
             margin-top: 5px; /* Added margin for spacing below character */
             padding: 2px 10px;
             border-radius: 10px;
@@ -133,21 +132,23 @@
         #buttons-container {
             position: absolute;
             bottom: 5%; /* Adjusted to move buttons down a bit */
-            left: 0;
-            width: 100%;
+            left: 50%; /* Center the container */
+            transform: translateX(-50%); /* Center the container */
+            max-width: 90%; /* Add side spacing */
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 10px; /* Reduced gap */
-            padding: 0 5%; /* Reduced padding */
+            gap: 5px; /* Reduced gap */
+            padding: 0; /* Removed padding */
             box-sizing: border-box;
         }
 
         #correct-btn, #incorrect-btn {
+            width: 45%; /* Force buttons to fill their grid cell */
             border: none;
             border-radius: 15px;
-            font-size: clamp(3em, 10vw, 4em); /* Increased font-size */
+            font-size: clamp(3.5em, 12vw, 4.5em); /* Increased font-size */
             font-weight: 900;
-            padding: 20px 0; /* Increased padding */
+            padding: 25px 0; /* Increased padding */
             cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.1s ease;
             font-family: 'Gaegu', cursive;
