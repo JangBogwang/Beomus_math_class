@@ -132,9 +132,9 @@
         #buttons-container {
             position: absolute;
             bottom: 5%; /* Adjusted to move buttons down a bit */
-            left: 50%; /* Center the container */
+            left: 50%; /* Corrected from 10% */
             transform: translateX(-50%); /* Center the container */
-            max-width: 90%; /* Add side spacing */
+            width: 90%; /* Explicitly set width */
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 5px; /* Reduced gap */
@@ -143,7 +143,7 @@
         }
 
         #correct-btn, #incorrect-btn {
-            width: 100%; /* Force buttons to fill their grid cell */
+            width: 40%; /* Force buttons to fill their grid cell */
             border: none;
             border-radius: 15px;
             font-size: clamp(3.5em, 12vw, 4.5em); /* Increased font-size */
