@@ -9,5 +9,8 @@ const characterData = [
     { src: "asset/character/prince.png", name: "왕자 범뮤" },
     { src: "asset/character/princess.png", name: "공주 범뮤" },
     { src: "asset/character/student.png", name: "학생 범뮤" },
-    { src: "asset/character/summer.png", name: "여름 범뮤" }
+    { src: "asset/character/summer.png", name: "여름 범뮤" },
+    { src: "asset/character/demon.png", name: "마왕 범뮤" },
+    { src: "asset/character/bikini.png", name: "비키니 범뮤" },
+    { src: "asset/character/snowman.png", name: "눈사람 범뮤" },
 ];
