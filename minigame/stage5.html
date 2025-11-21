@@ -7,7 +7,11 @@
     <link rel="icon" href="../asset/stage/stage5.png">
     <link href="https://fonts.googleapis.com/css2?family=Gaegu:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* Minigame Styles */
+        :root {
+            --border: #f2e9f5;
+            --shadow: 0 12px 30px rgba(255,137,192,.25);
+        }
+
         html, body {
             width: 100%;
             height: 100%;
@@ -27,36 +31,69 @@
             background-image: url('../asset/stage/stage5.png');
             background-size: cover;
             background-position: center;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            align-items: center;
-            padding: 5vh 0;
+            box-sizing: border-box;
+        }
+
+        #timer {
+            position: absolute;
+            top: 2%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            padding: 5px 20px;
+            border-radius: 15px;
+            font-size: 1.5em;
         }
 
         .characters-container {
+            position: absolute;
+            bottom: 20%; /* Adjusted to be higher up from the bottom */
+            left: 0;
+            width: 100%;
             display: flex;
             justify-content: space-between;
-            width: 100%;
-            padding: 0 5vw;
-            position: absolute;
-            top: 50%;
-            transform: translateY(-80%);
+            padding: 0 5%;
+            box-sizing: border-box;
+            align-items: flex-end; /* Align characters by their bottom */
+        }
+        
+        .character-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%; /* Increased character wrapper width */
+            /* Removed position: relative; as HP is now stacked */
         }
 
         #warrior, #demon {
-            width: 35vw;
-            max-width: 150px;
+            max-width: 200px; /* Increased max-width */
+            width: 100%;
             transition: transform 0.1s ease-in-out;
+            object-fit: contain; /* Ensure images scale properly */
         }
 
         #demon {
-            transform: scaleX(-1); /* Make demon face left */
+            transform: scaleX(-1);
+        }
+        
+        .hp {
+            background: #fff;
+            /* Removed position: absolute; top: -30px; */
+            margin-top: 5px; /* Added margin for spacing below character */
+            padding: 2px 10px;
+            border-radius: 10px;
+            font-size: 1.2em;
+            font-weight: 900;
+            color: #333;
+            border: 3px solid;
+            white-space: nowrap; /* Prevent HP text from wrapping */
         }
 
-        .attacked {
-            animation: shake 0.4s;
-        }
+        #warrior-hp { border-color: #7cd2ff; }
+        #demon-hp { border-color: #ff6b6b; }
+
+        .attacked { animation: shake 0.4s; }
 
         @keyframes shake {
             0%, 100% { transform: translateX(0); }
@@ -64,86 +101,120 @@
             30%, 70% { transform: translateX(8px); }
         }
 
-        #demon.attacked {
-            animation: shake-left 0.4s;
-        }
-
+        #demon.attacked { animation: shake-left 0.4s; }
+        
         @keyframes shake-left {
-            0%, 100% { transform: translateX(0) scaleX(-1); }
-            10%, 50%, 90% { transform: translateX(8px) scaleX(-1); }
-            30%, 70% { transform: translateX(-8px) scaleX(-1); }
+            0%, 100% { transform: scaleX(-1) translateX(0); }
+            10%, 50%, 90% { transform: scaleX(-1) translateX(-8px); }
+            30%, 70% { transform: scaleX(-1) translateX(8px); }
         }
 
-
-        #quiz-container {
-            background-color: rgba(255, 255, 255, 0.85);
-            padding: 15px 25px;
-            border-radius: 20px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+        .question-card {
+            position: absolute;
+            top: 15%;
+            left: 5%;
             width: 90%;
             text-align: center;
-            position: absolute;
-            top: 15vh;
+            background: #fff;
+            border: 2px solid var(--border);
+            border-radius: 24px;
+            padding: 24px;
+            box-shadow: var(--shadow);
+            box-sizing: border-box;
         }
 
-        #question {
+        .question {
             margin: 0;
-            font-size: clamp(1.8em, 6vw, 2.5em);
-            font-weight: 700;
-            color: #333;
+            font-size: clamp(28px, 6vw, 40px);
+            font-weight: 900;
+            letter-spacing: .5px;
         }
 
         #buttons-container {
+            position: absolute;
+            bottom: 5%; /* Adjusted to move buttons down a bit */
+            left: 0;
+            width: 100%;
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            width: 100%;
-            padding: 0 10vw;
-            position: absolute;
-            bottom: 10vh;
+            gap: 10px; /* Reduced gap */
+            padding: 0 5%; /* Reduced padding */
+            box-sizing: border-box;
         }
 
         #correct-btn, #incorrect-btn {
             border: none;
             border-radius: 15px;
-            font-size: clamp(2.5em, 8vw, 3.5em);
+            font-size: clamp(3em, 10vw, 4em); /* Increased font-size */
             font-weight: 900;
-            padding: 15px 0;
+            padding: 20px 0; /* Increased padding */
             cursor: pointer;
             transition: transform 0.1s ease, box-shadow 0.1s ease;
             font-family: 'Gaegu', cursive;
         }
 
-        #correct-btn {
-            background-color: #a7f3d0; /* mint */
-            color: #0c4b33;
-            box-shadow: 0 6px 0 #34d399;
+        #correct-btn { background-color: #a7f3d0; color: #0c4b33; box-shadow: 0 6px 0 #34d399; }
+        #incorrect-btn { background-color: #ffb8b8; color: #7f1d1d; box-shadow: 0 6px 0 #f87171; }
+        #correct-btn:active, #incorrect-btn:active { transform: translateY(4px); box-shadow: 0 2px 0 #888; }
+        
+        #end-screen {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.8);
+            color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            z-index: 10;
         }
+        #end-screen h1 { font-size: 3em; margin-bottom: 20px; }
+        .end-button {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            background-color: #ff89c0;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            font-size: 1.2em;
+        }
+        .hidden { display: none; }
 
-        #incorrect-btn {
-            background-color: #ffb8b8; /* light red */
-            color: #7f1d1d;
-            box-shadow: 0 6px 0 #f87171;
-        }
-
-        #correct-btn:active, #incorrect-btn:active {
-            transform: translateY(4px);
-            box-shadow: 0 2px 0 #888;
-        }
     </style>
 </head>
 <body>
     <div class="game-container">
-        <div id="quiz-container">
-            <p id="question"></p>
+        <div id="timer">Time: 60</div>
+        
+        <div class="question-card">
+            <p id="question" class="question"></p>
         </div>
+
         <div class="characters-container">
-            <img src="../asset/character/knight.png" id="warrior" alt="Warrior">
-            <img src="../asset/character/demon.png" id="demon" alt="Demon">
+            <div class="character-wrapper">
+                <img src="../asset/character/knight.png" id="warrior" alt="Warrior">
+                <div class="hp" id="warrior-hp">3 / 3</div>
+            </div>
+            <div class="character-wrapper">
+                <img src="../asset/character/demon.png" id="demon" alt="Demon">
+                <div class="hp" id="demon-hp">25 / 25</div>
+            </div>
         </div>
+
         <div id="buttons-container">
             <button id="correct-btn">O</button>
             <button id="incorrect-btn">X</button>
+        </div>
+
+        <div id="end-screen" class="hidden">
+            <h1 id="end-message"></h1>
+            <div>
+                <a href="#" onclick="location.reload()" class="end-button">다시하기</a>
+                <a href="../select_stage.html" class="end-button">나가기</a>
+            </div>
         </div>
     </div>
 
