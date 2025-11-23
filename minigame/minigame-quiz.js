@@ -66,7 +66,6 @@
 
         // 문제 생성 + 타이머 시작
         generateQuestion();
-        startTimer();
     }
 
     // ===== HP / 타이머 표시 =====
