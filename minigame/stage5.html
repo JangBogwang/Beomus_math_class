@@ -59,6 +59,7 @@
         }
         
         .character-wrapper {
+            position: relative; /* Needed for positioning the slash effect */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -94,21 +95,6 @@
             box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
         }
         
-        .hp {
-            background: linear-gradient(to bottom, #ffffff, #f0f0f0);
-            margin-top: 8px;
-            padding: 5px 12px;
-            border-radius: 12px;
-            font-size: clamp(0.9em, 3.5vw, 1.1em);
-            font-weight: 900;
-            color: #2d2d2d;
-            border: 3px solid #ffb6d9;
-            white-space: nowrap;
-            box-shadow: 0 4px 8px rgba(255, 137, 192, 0.3),
-                        inset 0 1px 2px rgba(255, 255, 255, 0.8);
-            text-shadow: 0 1px 1px rgba(255, 255, 255, 0.5);
-        }
-
         .hp-text {
             position: absolute;
             top: 50%;
@@ -116,7 +102,7 @@
             transform: translate(-50%, -50%);
             font-size: 0.9em;
             font-weight: 900;
-            color: white;
+            color: #f3f0f1; /* Changed to red */
             text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
             white-space: nowrap;
         }
@@ -124,20 +110,100 @@
         #warrior-hp-bar { background: linear-gradient(to bottom, #7cd2ff, #4fb3e8); }
         #demon-hp-bar { background: linear-gradient(to bottom, #ff6b6b, #e84545); }
 
-        .attacked { animation: shake 0.4s; }
-
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            10%, 50%, 90% { transform: translateX(-8px); }
-            30%, 70% { transform: translateX(8px); }
+        .slash-effect {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1.5);
+            width: 100%;
+            height: auto;
+            opacity: 0;
+            pointer-events: none; /* Make sure it doesn't block clicks */
+            z-index: 5;
         }
 
-        #demon.attacked { animation: shake-left 0.4s; }
-        
-        @keyframes shake-left {
-            0%, 100% { transform: scaleX(-1) translateX(0); }
-            10%, 50%, 90% { transform: scaleX(-1) translateX(-8px); }
-            30%, 70% { transform: scaleX(-1) translateX(8px); }
+        .slash-animation {
+            animation: slash-fade 0.4s ease-out;
+        }
+
+        @keyframes slash-fade {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1.2) rotate(-30deg); }
+            50% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.6) rotate(10deg); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(2) rotate(20deg); }
+        }
+
+        .attacked {
+            animation: intense-shake 0.4s;
+        }
+
+        @keyframes intense-shake {
+            0%, 100% { transform: translateX(0) scale(1); filter: brightness(1); }
+            10% { transform: translateX(-10px) scale(1.02); }
+            30% { transform: translateX(10px) scale(0.98); }
+            50% { filter: brightness(1.5); }
+            70% { transform: translateX(-10px) scale(1.02); }
+            90% { transform: translateX(10px) scale(0.98); }
+        }
+
+        #demon.attacked {
+            animation: intense-shake-left 0.4s;
+        }
+
+        @keyframes intense-shake-left {
+            0%, 100% { transform: scaleX(-1) translateX(0) scale(1); filter: brightness(1); }
+            10% { transform: scaleX(-1) translateX(-10px) scale(1.02); }
+            30% { transform: scaleX(-1) translateX(10px) scale(0.98); }
+            50% { filter: brightness(1.5); }
+            70% { transform: scaleX(-1) translateX(-10px) scale(1.02); }
+            90% { transform: scaleX(-1) translateX(10px) scale(0.98); }
+        }
+
+        .speech-bubbles-container {
+            position: absolute;
+            top: 60%; 
+            transform: translateY(-50%);
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            padding: 0 5%;
+            box-sizing: border-box;
+            z-index: 5;
+        }
+
+        .speech-bubble-wrapper {
+            width: 40%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .speech-bubble {
+            position: relative;
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 15px;
+            padding: 12px;
+            font-size: clamp(1em, 4vw, 1.2em);
+            text-align: center;
+            color: #333;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border: 2px solid #ddd;
+            min-height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .speech-bubble:after {
+            content: '';
+            position: absolute;
+            top: -15px; /* Position the triangle above the bubble */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 15px solid transparent;
+            border-right: 15px solid transparent;
+            border-bottom: 15px solid rgba(255, 255, 255, 0.9);
         }
 
         .question-card {
@@ -229,7 +295,6 @@
             left: 10%;
             right: 10%;
             height: 40%;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
             border-radius: 20px 20px 50% 50%;
             pointer-events: none;
         }
@@ -248,7 +313,6 @@
             left: 10%;
             right: 10%;
             height: 40%;
-            background: linear-gradient(to bottom, rgba(255, 255, 255, 0.6), transparent);
             border-radius: 20px 20px 50% 50%;
             pointer-events: none;
         }
@@ -351,12 +415,31 @@
 
         <div class="characters-container">
             <div class="character-wrapper">
+                <img src="../asset/effect/slash.svg" class="slash-effect hidden" id="warrior-slash">
                 <img src="../asset/character/knight.png" id="warrior" alt="Warrior">
-                <div class="hp" id="warrior-hp">3 / 3</div>
+                <div class="hp-container">
+                    <div class="hp-bar" id="warrior-hp-bar" style="width: 100%;">
+                        <span class="hp-text" id="warrior-hp">3 / 3</span>
+                    </div>
+                </div>
             </div>
             <div class="character-wrapper">
+                <img src="../asset/effect/slash.svg" class="slash-effect hidden" id="demon-slash">
                 <img src="../asset/character/demon.png" id="demon" alt="Demon">
-                <div class="hp" id="demon-hp">25 / 25</div>
+                <div class="hp-container">
+                    <div class="hp-bar" id="demon-hp-bar" style="width: 100%;">
+                        <span class="hp-text" id="demon-hp">20 / 20</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="speech-bubbles-container">
+            <div class="speech-bubble-wrapper">
+                <div class="speech-bubble" id="warrior-speech">...</div>
+            </div>
+            <div class="speech-bubble-wrapper">
+                <div class="speech-bubble" id="demon-speech">...</div>
             </div>
         </div>
 
@@ -369,6 +452,10 @@
             </div>
         </div>
 
+        <video id="final-attack-video" class="hidden" width="100%" height="100%" style="position: absolute; top: 0; left: 0; z-index: 11; object-fit: cover;">
+            <source src="../asset/video/fianl_attack.mp4" type="video/mp4">
+        </video>
+
         <div id="end-screen" class="hidden">
             <h1 id="end-message"></h1>
             <div>
@@ -380,6 +467,9 @@
 
     <audio id="bgm" loop>
         <source src="../asset/bgm/stage_5.mp3" type="audio/mpeg">
+    </audio>
+    <audio id="hit-sfx">
+        <source src="../asset/sfx/hit.mp3" type="audio/mpeg">
     </audio>
 
     <script src="minigame-quiz.js"></script>

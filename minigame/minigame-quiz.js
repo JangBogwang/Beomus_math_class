@@ -9,12 +9,20 @@
     const timerEl       = document.getElementById('timer');
     const warriorHpEl   = document.getElementById('warrior-hp');
     const demonHpEl     = document.getElementById('demon-hp');
+    const warriorHpBar  = document.getElementById('warrior-hp-bar');
+    const demonHpBar    = document.getElementById('demon-hp-bar');
     const endScreen     = document.getElementById('end-screen');
     const endMessageEl  = document.getElementById('end-message');
+    const finalAttackVideoEl = document.getElementById('final-attack-video');
+    const warriorSlash = document.getElementById('warrior-slash');
+    const demonSlash = document.getElementById('demon-slash');
+    const hitSfx = document.getElementById('hit-sfx');
+    const warriorSpeech = document.getElementById('warrior-speech');
+    const demonSpeech = document.getElementById('demon-speech');
 
     // ===== Game State =====
     const INITIAL_WARRIOR_HP = 3;
-    const INITIAL_DEMON_HP   = 25;
+    const INITIAL_DEMON_HP   = 20;
     const INITIAL_TIME       = 60;
 
     let isEquationCorrect = false;
@@ -66,12 +74,26 @@
 
         // 문제 생성 + 타이머 시작
         generateQuestion();
+        if (timerEl) {
+            startTimer();
+        }
     }
 
     // ===== HP / 타이머 표시 =====
     function updateHpDisplay() {
+        // Warrior HP
         if (warriorHpEl) warriorHpEl.textContent = `${warriorHp} / ${INITIAL_WARRIOR_HP}`;
-        if (demonHpEl)   demonHpEl.textContent   = `${demonHp} / ${INITIAL_DEMON_HP}`;
+        if (warriorHpBar) {
+            const warriorHpPercent = (warriorHp / INITIAL_WARRIOR_HP) * 100;
+            warriorHpBar.style.width = `${warriorHpPercent}%`;
+        }
+
+        // Demon HP
+        if (demonHpEl) demonHpEl.textContent = `${demonHp} / ${INITIAL_DEMON_HP}`;
+        if (demonHpBar) {
+            const demonHpPercent = (demonHp / INITIAL_DEMON_HP) * 100;
+            demonHpBar.style.width = `${demonHpPercent}%`;
+        }
     }
 
     function updateTimerDisplay() {
@@ -126,17 +148,40 @@
         }
     }
 
+    function triggerAttack(character, slashEffect) {
+        if (hitSfx) {
+            hitSfx.currentTime = 0;
+            hitSfx.play();
+        }
+        if (character) {
+            character.classList.add('attacked');
+            setTimeout(() => character.classList.remove('attacked'), 400);
+        }
+        if (slashEffect) {
+            slashEffect.classList.remove('hidden');
+            slashEffect.classList.add('slash-animation');
+            setTimeout(() => {
+                slashEffect.classList.remove('slash-animation');
+                slashEffect.classList.add('hidden');
+            }, 400);
+        }
+    }
+
     // ===== 정답 처리 =====
     function handleAnswer(userChoseCorrect) {
         if (gameEnded) return;
 
+        // Reset speech bubbles
+        if (warriorSpeech) warriorSpeech.textContent = '...';
+        if (demonSpeech) demonSpeech.textContent = '...';
+
         if (userChoseCorrect === isEquationCorrect) {
             // 정답 → 악마 피해
             demonHp--;
-            if (demon) {
-                demon.classList.add('attacked');
-                setTimeout(() => demon.classList.remove('attacked'), 400);
-            }
+            triggerAttack(demon, demonSlash);
+            if (warriorSpeech) warriorSpeech.textContent = '정답이다!';
+            if (demonSpeech) demonSpeech.textContent = '크윽...';
+
 
             if (demonHp <= 0) {
                 demonHp = 0;
@@ -147,10 +192,9 @@
         } else {
             // 오답 → 기사 피해
             warriorHp--;
-            if (warrior) {
-                warrior.classList.add('attacked');
-                setTimeout(() => warrior.classList.remove('attacked'), 400);
-            }
+            triggerAttack(warrior, warriorSlash);
+            if (warriorSpeech) warriorSpeech.textContent = '앗, 틀렸다!';
+            if (demonSpeech) demonSpeech.textContent = '어리석군!';
 
             if (warriorHp <= 0) {
                 warriorHp = 0;
@@ -174,16 +218,32 @@
         if (timerId) clearInterval(timerId);
         if (bgm) bgm.pause();
 
-        if (endMessageEl) {
-            endMessageEl.textContent = didWin ? '✨ 성공! ✨' : '실패...';
-        }
-
-        if (endScreen) {
-            endScreen.classList.remove('hidden');
-            endScreen.style.display = 'flex';   // 항상 보이도록 직접 지정
-        }
-
         showGameElements(false);
+
+        if (didWin && finalAttackVideoEl) {
+            // 비디오 재생 (스테이지 5 클리어)
+            finalAttackVideoEl.classList.remove('hidden');
+            finalAttackVideoEl.style.display = 'block';
+            finalAttackVideoEl.play();
+
+            finalAttackVideoEl.onended = () => {
+                finalAttackVideoEl.style.display = 'none';
+                if (endMessageEl) endMessageEl.textContent = '✨ 최종 클리어! ✨';
+                if (endScreen) {
+                    endScreen.classList.remove('hidden');
+                    endScreen.style.display = 'flex';
+                }
+            };
+        } else {
+            // 일반 게임 종료 (패배 또는 다른 스테이지)
+            if (endMessageEl) {
+                endMessageEl.textContent = didWin ? '✨ 성공! ✨' : '실패...';
+            }
+            if (endScreen) {
+                endScreen.classList.remove('hidden');
+                endScreen.style.display = 'flex';
+            }
+        }
     }
 
     // ===== UI 토글 =====
