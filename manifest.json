@@ -1,0 +1,21 @@
+{
+  "name": "범뮤쌤의 구구단 게임",
+  "short_name": "구구단 게임",
+  "description": "범뮤와 함께하는 재미있는 구구단 학습 게임!",
+  "start_url": "/index.html",
+  "display": "standalone",
+  "background_color": "#fff7fb",
+  "theme_color": "#ff89c0",
+  "icons": [
+    {
+      "src": "asset/character/normal.png",
+      "type": "image/png",
+      "sizes": "192x192"
+    },
+    {
+      "src": "asset/character/normal.png",
+      "type": "image/png",
+      "sizes": "512x512"
+    }
+  ]
+}

@@ -4,6 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>말랑말랑 구구단 게임 - 모드 선택</title>
+  <meta name="theme-color" content="#ff89c0">
+  <link rel="icon" href="asset/character/normal.png" />
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="asset/character/normal.png">
   <link rel="stylesheet" href="styles.css" />
   <style>
     .mode-selection {
@@ -57,7 +61,7 @@
       <p class="sub">플레이할 게임 모드를 선택해주세요.</p>
     </header>
 
-    <img id="main-character" src="" alt="메인 캐릭터" class="main-character">
+    <img id="main-character" src="asset/character/normal.png" alt="메인 캐릭터" class="main-character">
 
     <div class="mode-selection">
       <div class="mode-card">
@@ -85,9 +89,7 @@
   </main>
   <script src="image-loader.js"></script>
   <script>
-    const mainCharacterEl = document.getElementById("main-character");
-    const randomCharacter = characterData[Math.floor(Math.random() * characterData.length)];
-    mainCharacterEl.src = randomCharacter.src;
+    document.getElementById("main-character").src = "asset/character/normal.png";
   </script>
 </body>
 </html>
