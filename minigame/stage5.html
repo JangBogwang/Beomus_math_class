@@ -404,6 +404,37 @@
                 border-radius: 16px;
             }
         }
+        @media (max-width: 400px) {
+            .question-card {
+                top: 40%;
+                padding: 12px 10px;
+            }
+            .question {
+                font-size: clamp(20px, 5vw, 30px);
+            }
+            .characters-container {
+                top: 15%;
+            }
+            .speech-bubbles-container {
+                top: 62%;
+            }
+            #correct-btn, #incorrect-btn {
+                padding: 12px 0;
+                font-size: clamp(2.5em, 8vw, 3.5em);
+                box-shadow: 0 4px 0 #34d399;
+            }
+            #incorrect-btn {
+                box-shadow: 0 4px 0 #f87171;
+            }
+            #correct-btn:active {
+                box-shadow: 0 1px 0 #34d399;
+                transform: translateY(3px);
+            }
+            #incorrect-btn:active {
+                box-shadow: 0 1px 0 #f87171;
+                transform: translateY(3px);
+            }
+        }
     </style>
 </head>
 <body>

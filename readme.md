@@ -20,3 +20,6 @@
 ## 어떻게 시작하나요?
 
 게임은 웹 브라우저에서 바로 실행할 수 있습니다. `index.html` 파일을 열고 즐거운 수학의 세계로 떠나보세요!
+
+## 웹 배포 주소 
+[beomusmathclass.netlify.app](https://beomusmathclass.netlify.app/)
